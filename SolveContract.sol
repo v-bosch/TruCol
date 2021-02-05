@@ -3,7 +3,7 @@ pragma solidity >=0.4.16 <0.9.0;
 contract SolveContract {
 
     templateTestContract testContract;
-    address owner;
+    address payable owner;
 
     constructor(address testAddress) {
         testContract = templateTestContract(testAddress);
@@ -11,9 +11,20 @@ contract SolveContract {
     }
     
     function test() public {
-        testContract.test(owner);
+        testContract.test();
     }
 
+
+    receive() external payable {
+    }
+    
+    function payout() public payable {
+        owner.transfer(address(this).balance);
+    }
+    
+    function getBalance() public view returns (uint) {
+        return address(this).balance;
+    }
     
 
     // Calculate the square route
@@ -28,5 +39,5 @@ contract SolveContract {
 }
 
 abstract contract templateTestContract {
-    function test(address hunter) virtual public;
+    function test() virtual public;
 }
