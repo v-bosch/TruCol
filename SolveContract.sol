@@ -2,13 +2,19 @@
 pragma solidity >=0.4.16 <0.9.0;
 contract SolveContract {
 
-    backupTestContract testContract;
+    templateTestContract testContract;
+    address owner;
+
+    constructor(address testAddress) {
+        testContract = templateTestContract(testAddress);
+        owner = msg.sender;
+    }
+    
+    function test() public {
+        testContract.test(owner);
+    }
 
     
-    function test(address testAddress) public {
-        testContract = backupTestContract(testAddress);
-        testContract.test();
-    }
 
     // Calculate the square route
     function main(uint x) pure public returns(uint y) {
@@ -21,6 +27,6 @@ contract SolveContract {
     }
 }
 
-abstract contract backupTestContract {
-    function test() virtual public;
+abstract contract templateTestContract {
+    function test(address hunter) virtual public;
 }
