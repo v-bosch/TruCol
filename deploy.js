@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // This file can be used to deploy an ethereum contract to a local ethereum blockchain.
 // The following tutorial was used:
 // https://hackernoon.com/how-to-set-up-your-own-ethereum-development-environment-a-step-by-step-guide-j5kp3b55
@@ -6,10 +7,16 @@ const Web3 = require('web3');
 const web3 = new Web3('http://localhost:8545');
 
 // get / retrieve required bytecode and abi for the contract from a local file, these files should be created after compiling the solidity files.
+=======
+const fs = require('fs');
+const Web3 = require('web3');
+const web3 = new Web3('http://localhost:8545');
+>>>>>>> Add deploy example
 const bytecode = fs.readFileSync('./build/TestContract.bin');
 const abi = JSON.parse(fs.readFileSync('./build/TestContract.abi'));
 
 (async function () {
+<<<<<<< HEAD
   // Set the owner of the contract.
   const ganacheAccounts = await web3.eth.getAccounts();
   const myWalletAddress = ganacheAccounts[0];
@@ -18,6 +25,13 @@ const abi = JSON.parse(fs.readFileSync('./build/TestContract.abi'));
   const myContract = new web3.eth.Contract(abi);
 
   // Deploy the contract.
+=======
+  const ganacheAccounts = await web3.eth.getAccounts();
+  const myWalletAddress = ganacheAccounts[0];
+
+  const myContract = new web3.eth.Contract(abi);
+
+>>>>>>> Add deploy example
   myContract.deploy({
     data: bytecode.toString(),
   }).send({
