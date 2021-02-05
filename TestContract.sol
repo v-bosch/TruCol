@@ -3,30 +3,34 @@ pragma solidity >=0.4.16 <0.9.0;
 
 contract TestContract {
 
-    backupSolveContract solver;
+    templateSolveContract solver;
     bool solved;
+    address owner;
 
     constructor() {
         solved = false;
+        owner = msg.sender;
     }
 
-    function test() public {
-        solver = backupSolveContract(msg.sender);
+    function test(address hunter) public {
+        solver = templateSolveContract(msg.sender);
         uint x = 100;
         uint y = 10;
         require(y == solver.main(x), "Wrong output");
         solved = true;
+        owner = hunter;
     }
 
     function getSolved() public view returns (bool){
         return solved;
     }
+    
+    function getOwner() public view returns (address) {
+        return owner;
+    }
 
 }
 
-
-
-abstract contract backupSolveContract {
+abstract contract templateSolveContract {
     function main(uint x) virtual public returns (uint);
 }
-
