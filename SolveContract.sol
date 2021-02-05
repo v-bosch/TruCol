@@ -8,7 +8,7 @@ contract SolveContract {
     address payable owner;              // Create variable for the owner which solves the test contract.
 
     // Constructor to initialise the contract variables.
-    constructor(address testAddress) payable {              
+    constructor(address testAddress) public payable {              
         testContract = TemplateTestContract(testAddress);   // Initialise the testContract variable.
         owner = msg.sender;                                 // Initialise the owner of the contract to be the creator of the contract.
     }
@@ -27,6 +27,15 @@ contract SolveContract {
             y = z;
             z = (x / z + z) / 2;
         }
+    }
+    
+    // Function to get the testContract
+    function getTestContract()  public view returns(TemplateTestContract) {
+        return testContract;
+    }
+    
+        function getOwner() public view returns (address) { 
+        return owner;
     }
 }
 
