@@ -10,22 +10,9 @@ contract SolveContract {
         owner = msg.sender;
     }
     
-    function test() public {
-        testContract.test();
+    function test() public payable{
+        testContract.test(owner);
     }
-
-
-    receive() external payable {
-    }
-    
-    function payout() public payable {
-        owner.transfer(address(this).balance);
-    }
-    
-    function getBalance() public view returns (uint) {
-        return address(this).balance;
-    }
-    
 
     // Calculate the square route
     function main(uint x) pure public returns(uint y) {
@@ -39,5 +26,5 @@ contract SolveContract {
 }
 
 abstract contract templateTestContract {
-    function test() virtual public;
+    function test(address payable hunter) virtual public;
 }
