@@ -12,14 +12,14 @@ contract TestContract {
         owner = msg.sender;
     }
 
-    function test() public payable {
+    function test(address payable hunter) public payable {
         solver = templateSolveContract(msg.sender); // The message sender is the contract activating the test function
         uint x = 100;
         uint16 y = 10;
         require(y == solver.main(x), "Wrong output");
         solved = true;
-        owner = msg.sender;
-        payable(owner).transfer(address(this).balance);
+        owner = hunter;
+        owner.transfer(address(this).balance);
     }
 
     
@@ -40,3 +40,4 @@ contract TestContract {
 abstract contract templateSolveContract {
     function main(uint x) virtual public returns (uint);
 }
+
