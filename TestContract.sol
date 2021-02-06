@@ -41,7 +41,9 @@ contract TestContract {
     
     // Refund method to claim the value of the contract after expiry.
     function refund() public {
-        require(msg.sender == owner && block.timestamp >= expiry, "Contract is not expired yet");   // The sender must own the contract and the contract must be expired.
+        require(solved == false, "Only an unsolved contract can be refunded");      // Make sure the contract is not resolved yet.
+        require(msg.sender == owner, "Only the owner can call for a refund");       // Make sure the caller of the refund function is the solver of the contract.
+        require(block.timestamp >= expiry, "Contract is not expired yet");          // Make sure the contract is expired, only expired contracts can be refunded.
         selfdestruct(owner);    // Let the contract selfdestruct and move the value to the owner.
     }
 
