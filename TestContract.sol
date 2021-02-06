@@ -20,7 +20,7 @@ contract TestContract {
         uint16 y = 10;                                  // Sample expected output.
         require(y == solver.main(x), "Wrong output");   // Require the output of the main function to be y.
         solved = true;                                  // Set solved to true.
-        owner = hunter;                                 // Set the owner to the solver.
+        owner = hunter;                                 // Set the ownership to the hunter.
         owner.transfer(address(this).balance);          // Transfer the bounty to the hunter.
     }
 
@@ -47,7 +47,7 @@ contract TestContract {
 
 }
 
-// TemplateSolveContract so the TestContract knows the structure of the solver.
+// TemplateSolveContract so the TestContract knows the structure of the SolveContract.
 abstract contract TemplateSolveContract {
     function main(uint x) virtual public returns (uint);
 }
