@@ -81,8 +81,7 @@ contract TestContract is VRFConsumerBase {
         return LINK.balanceOf(address(this));
     }
     
-    
-        // Refund method to claim the value of the contract after expiry.
+    // Refund method to claim the value of the contract after expiry.
     function refund() public  {
         require(solved == false, "Only an unsolved contract can be refunded");      // Make sure the contract is not resolved yet.
         require(msg.sender == owner, "Only the owner can call for a refund");       // Make sure the caller of the refund function is the solver of the contract.
