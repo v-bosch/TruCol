@@ -9,15 +9,15 @@ contract TestContract {
     uint expiry;        // Get the time when the contract expires.
 
     constructor() payable {      // Constructor to initialise values.
-        solved = false;         
+        solved = false;         //  Boolean value to indicate if contract is already solved.
         owner = msg.sender;     //  Set the owner of the contract to the creator of the contract.
-        expiry = 1612569800;
+        expiry = 1612569800;    //  Unix timestamp of the moment of expiry. 
     }
 
     function test(address payable hunter) public payable {
         TemplateSolveContract solver = TemplateSolveContract(msg.sender); // The message sender is the contract activating the test function.
-        uint x = 100;
-        uint16 y = 10;
+        uint x = 100;                                   // Sample input.
+        uint16 y = 10;                                  // Sample expected output.
         require(y == solver.main(x), "Wrong output");   // Require the output of the main function to be y.
         solved = true;                                  // Set solved to true.
         owner = hunter;                                 // Set the owner to the solver.
