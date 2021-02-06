@@ -5,7 +5,7 @@ const fs = require('fs');
 const Web3 = require('web3');
 const web3 = new Web3('http://localhost:8545');
 
-// Get needed bytecode and abi for the contract from a local file, these files should be created after compiling the solidity files.
+// get / retrieve required bytecode and abi for the contract from a local file, these files should be created after compiling the solidity files.
 const bytecode = fs.readFileSync('./build/TestContract.bin');
 const abi = JSON.parse(fs.readFileSync('./build/TestContract.abi'));
 
