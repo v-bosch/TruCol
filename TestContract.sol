@@ -6,10 +6,12 @@ contract TestContract {
 
     bool solved;    // Boolean to denote if contract is solved.
     address payable owner;  // Owner of the contract, first this is the sponser.
+    uint expiry;        // Get the time when the contract expires.
 
     constructor() payable {      // Constructor to initialise values.
         solved = false;         
         owner = msg.sender;     //  Set the owner of the contract to the creator of the contract.
+        expiry = 1612569800;
     }
 
     function test(address payable hunter) public payable {
@@ -36,6 +38,12 @@ contract TestContract {
     function getBalance() public view returns (uint) {
         return address(this).balance;
     }
+    
+    // Refund method to claim the value of the contract after expiry.
+    function refund() public {
+        require(msg.sender == owner && block.timestamp >= expiry, "Contract is not expired yet");   // The sender must own the contract and the contract must be expired.
+        selfdestruct(owner);    // Let the contract selfdestruct and move the value to the owner.
+    }
 
 }
 
@@ -43,7 +51,3 @@ contract TestContract {
 abstract contract TemplateSolveContract {
     function main(uint x) virtual public returns (uint);
 }
-
-
-
-
