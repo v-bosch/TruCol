@@ -6,6 +6,7 @@ import "https://raw.githubusercontent.com/smartcontractkit/chainlink/master/evm-
 // Example contract of a TestContract.
 contract TestContract is VRFConsumerBase {
 
+<<<<<<< HEAD
     bool solved;                // Boolean to denote if contract is solved.
     address payable owner;      // Owner of the contract, first this is the sponser.
     address payable hunter;     // Hunter of the contract.
@@ -16,6 +17,11 @@ contract TestContract is VRFConsumerBase {
     uint256 public seed;
     uint256 public randomNumber;
     TemplateSolveContract solver = TemplateSolveContract(msg.sender);
+=======
+    bool solved;    // Boolean to denote if contract is solved.
+    address payable owner;  // Owner of the contract, first this is the sponser.
+    uint expiry;        // Get the time when the contract expires.
+>>>>>>> Add refund method
 
     constructor(address _vrfCoordinator, address _link, bytes32 _keyHash, uint _expiry, uint256 _seed
     ) VRFConsumerBase(
@@ -24,10 +30,14 @@ contract TestContract is VRFConsumerBase {
         ) public payable {      // Constructor to initialise values.
         solved = false;         //  Boolean value to indicate if contract is already solved.
         owner = msg.sender;     //  Set the owner of the contract to the creator of the contract.
+<<<<<<< HEAD
         expiry = _expiry;       //  Unix timestamp of the moment of expiry. 
         seed = _seed;           // User provided seed for the oracle.
         keyHash = _keyHash;     // keyHash of the VRF Coordinator
         fee = 0.1 * 10 ** 18;   // 0.1 LINK (price to get a random number from the oreacle)
+=======
+        expiry = 1612569800;
+>>>>>>> Add refund method
     }
 
 
@@ -76,6 +86,7 @@ contract TestContract is VRFConsumerBase {
         return address(this).balance;
     }
     
+<<<<<<< HEAD
     // Getter function for the LINK balance of the contract.
     function getLinkBalance() public view returns (uint) {
         return LINK.balanceOf(address(this));
@@ -87,6 +98,11 @@ contract TestContract is VRFConsumerBase {
         require(solved == false, "Only an unsolved contract can be refunded");      // Make sure the contract is not resolved yet.
         require(msg.sender == owner, "Only the owner can call for a refund");       // Make sure the caller of the refund function is the solver of the contract.
         require(block.timestamp >= expiry, "Contract is not expired yet");          // Make sure the contract is expired, only expired contracts can be refunded.
+=======
+    // Refund method to claim the value of the contract after expiry.
+    function refund() public {
+        require(msg.sender == owner && block.timestamp >= expiry, "Contract is not expired yet");   // The sender must own the contract and the contract must be expired.
+>>>>>>> Add refund method
         selfdestruct(owner);    // Let the contract selfdestruct and move the value to the owner.
     }
 
@@ -95,5 +111,9 @@ contract TestContract is VRFConsumerBase {
 // TemplateSolveContract so the TestContract knows the structure of the SolveContract.
 abstract contract TemplateSolveContract {
     function main(uint x) virtual public returns (uint);
+<<<<<<< HEAD
 }
 
+=======
+}
+>>>>>>> Add refund method
