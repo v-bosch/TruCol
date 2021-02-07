@@ -1,0 +1,82 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity >=0.4.16 <0.9.0;
+pragma experimental ABIEncoderV2;
+
+contract SolveNQueens {
+
+    TemplateTestContract testContract;  // Create variable for the testContract which needs to be solved.
+    address payable owner;      
+    bool[][]board;              // Chessboard
+    uint8 N;                    // Number of queens  
+
+    constructor(address testAddress) payable {              
+        testContract = TemplateTestContract(testAddress);   // Initialise the testContract variable.
+        owner = msg.sender;                                 // Initialise the owner of the contract to be the creator of the contract.
+        N = 4;
+    }
+
+     // Function to solve the testContract.
+    function solve() public payable{
+        testContract.test(owner);
+    }
+
+    function main(bool[][] memory x) public returns (bool[][] memory b) {
+        (bool a, bool[][] memory solution) = solveNQ(x, N);
+        return(solution);
+
+    }
+
+    function isSafe(bool[][] memory b, uint8 row, uint8 col) public view returns (bool) { 
+        uint8 i = row;
+        uint8 j = col; 
+    
+        // Check this row on left side 
+        for (i = 0; i < col; i++) 
+            if (b[row][i]) 
+                return false; 
+    
+        // Check upper diagonal on left side 
+        for (i;i >= 0; i--) 
+            for (j; j >= 0; j--) 
+                if (b[i][j]) 
+                    return false; 
+        
+        // Check lower diagonal on left side 
+        for (i; i < N; i++) 
+            for (j; j >= 0; j--) 
+                if (b[i][j]) 
+                    return false; 
+    
+        return (true); 
+    } 
+
+    function solveNQ(bool[][] memory b, uint8 col) public returns (bool, bool[][] memory) { 
+        // If all queens are placed 
+        if (b[0].length >= N) 
+            return (true, b); 
+    
+        for (uint8 i = 0; i < N; i++) { 
+            // Check if the queen can be placed 
+            if (isSafe(b, i, col)) { 
+                // Place queen 
+                board[i][col] = true; 
+    
+                // recur 
+                (bool a, bool[][] memory c) = solveNQ(b, col + 1);
+                if (a)
+                    return (true, c); 
+    
+                // no solution, remove queen 
+                board[i][col] = false; 
+            } 
+        } 
+        // If the queen cannot be placed in any row in 
+            //this colum col then return false 
+        return (false, b); 
+    }
+}
+
+// TemplateTestContract so the SolveContract knows the structure of the testContract.
+abstract contract TemplateTestContract {
+    function test(address payable hunter) virtual external;
+}
