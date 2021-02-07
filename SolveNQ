@@ -6,12 +6,8 @@ contract SolveNQueens {
 
     TemplateTestContract testContract;  // Create variable for the testContract which needs to be solved.
     address payable owner;      
-
-      
-    bool[][]board;
-    //bool[][]solution;
-    
-    uint8 N ;
+    bool[][]board;              // Chessboard
+    uint8 N;                    // Number of queens  
 
     constructor(address testAddress) payable {              
         testContract = TemplateTestContract(testAddress);   // Initialise the testContract variable.

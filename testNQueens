@@ -4,17 +4,14 @@ pragma experimental ABIEncoderV2;
 
 contract TestNQueens {
 
-    uint8 N;
-      
-    bool[][]board;
-    bool[][]solution;
+    bool[][]board;              // Chessboard
+    uint8 N;                    // Number of queens  
     
-    bool solved;    // Boolean to denote if contract is solved.
-    address payable owner;  // Owner of the contract, first this is the sponser.
-    uint expiry;        // Get the time when the contract expires.
+    bool solved;                // Boolean to denote if contract is solved.
+    address payable owner;      // Owner of the contract, first this is the sponser.
+    uint expiry;                // Get the time when the contract expires.
     
-    
-    constructor() payable {      // Constructor to initialise values.
+    constructor() payable {         // Constructor to initialise values.
             solved = false;         //  Boolean value to indicate if contract is already solved.
             owner = msg.sender;     //  Set the owner of the contract to the creator of the contract.
             expiry = 1612569800;    //  Unix timestamp of the moment of expiry. 
@@ -24,24 +21,36 @@ contract TestNQueens {
     function test(address payable hunter) public payable {
         TemplateSolveContract solver = TemplateSolveContract(msg.sender);
         
+        // Initialize the empty chessboard that needs to be solved
         board = [[ false, false, false, false ], 
         [ false, false, false, false ], 
         [false, false, false, false], 
         [ false, false, false, false]];
         
-        solution = [[ false, false, true, false ], 
-        [ true, false, false, false ], 
-        [false, false, false, true], 
-        [ false, true, false, false]];
-        
-        //solution == solver.main(board)
-
-          //needs to be expanded, this is just a quick check whether the contract works   
-        require(solution[0][0] != solver.main(board)[0][0], "Wrong output");     
+        require(checkQueens(solver.main(board)), "Wrong answer");
        
         solved = true;                                  // Set solved to true.
         owner = hunter;                                 // Set the ownership to the hunter.
         owner.transfer(address(this).balance);          // Transfer the bounty to the hunter.  
+    }
+    
+     function checkQueens(bool[][] memory b) public view returns(bool correct) {
+        uint8 queens;
+        uint8 [] memory rowqueens;
+        uint [] memory colqueens;
+        // check for every square whether there is a queen (value is true), if there is, add one to the variables.
+        for (uint8 i = 0; i < N; i++) { 
+            for (uint8 j = 0; j < N; j++) {
+                if (b[i][j] == true)
+                    queens ++;
+                    rowqueens[i] ++;
+                    colqueens[j] ++;
+                    // if there are more queens than specified, or there is more than 1 queen in a row/col, the solution is incorrect.
+                    if (queens > N || rowqueens[i] > 1 || colqueens[j] > 1)
+                        return false;
+            }
+        }
+        return true;
     }
 
     // Getter function for the solved variable.
