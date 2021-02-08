@@ -2,6 +2,8 @@
 pragma solidity >=0.4.16 <0.9.0;
 pragma experimental ABIEncoderV2;
 
+// This contract sets out the bounty for a simple N-Queens problem (with N=4), to be solved by the "SolveNQueens" contract.
+
 contract TestNQueens {
 
     bool[][]board;              // Chessboard
@@ -37,7 +39,7 @@ contract TestNQueens {
      function checkQueens(bool[][] memory b) public view returns(bool correct) {
         uint8 queens;
         uint8 [] memory rowqueens;
-        uint [] memory colqueens;
+        uint8 [] memory colqueens;
         // check for every square whether there is a queen (value is true), if there is, add one to the variables.
         for (uint8 i = 0; i < N; i++) { 
             for (uint8 j = 0; j < N; j++) {
