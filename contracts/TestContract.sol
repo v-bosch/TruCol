@@ -47,6 +47,6 @@ contract TestContract {
 }
 
 // TemplateSolveContract so the TestContract knows the structure of the SolveContract.
-contract TemplateSolveContract is ITemplateSolveContract {
+contract TemplateSolveContract {
 	function main(uint x) public returns (uint);
 }

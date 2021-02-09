@@ -23,7 +23,7 @@ contract SolveNQueens {
     }
 
     function main(bool[][] memory unsolved_board) public returns (bool[][] memory solved_board) {
-        (bool a, bool[][] memory solution) = solveNQ(x, N);
+        (bool a, bool[][] memory solution) = solveNQ(unsolved_board, N);
         return(solution);
 
     }
@@ -83,6 +83,6 @@ contract SolveNQueens {
 }
 
 // TemplateTestContract so the SolveContract knows the structure of the testContract.
-contract TemplateTestContract is ITemplateTestContract {
+contract TemplateTestContract {
     function test(address payable hunter) public;
 }
