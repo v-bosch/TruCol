@@ -30,7 +30,6 @@ contract SolveNQueens {
 
     // general solve function that is called by main, takes the empty board as input and returns whether there 
     // is a solution, and the solution itself. 
-
     function solveNQ(bool[4][4] memory board_in, uint8 col) public returns (bool, bool[4][4] memory) { 
         // If all queens are placed 
         if (board_in[0].length == N) 
