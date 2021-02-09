@@ -8,7 +8,7 @@ contract TestContract {
     address payable owner;  // Owner of the contract, first this is the sponser.
     uint expiry;        // Get the time when the contract expires.
 
-    constructor() payable {      // Constructor to initialise values.
+    constructor() public payable {      // Constructor to initialise values.
         solved = false;         //  Boolean value to indicate if contract is already solved.
         owner = msg.sender;     //  Set the owner of the contract to the creator of the contract.
         expiry = 1612569800;    //  Unix timestamp of the moment of expiry. 
@@ -48,5 +48,5 @@ contract TestContract {
 
 // TemplateSolveContract so the TestContract knows the structure of the SolveContract.
 contract TemplateSolveContract is ITemplateSolveContract {
-	function main(uint x) virtual public returns (uint);
+	function main(uint x) public returns (uint);
 }

@@ -11,7 +11,7 @@ contract SolveNQueens {
     bool[][]board;              // Chessboard
     uint8 N;                    // Number of queens  
 
-    constructor(address testAddress) payable {              
+    constructor(address testAddress) public payable {              
         testContract = TemplateTestContract(testAddress);   // Initialise the testContract variable.
         owner = msg.sender;                                 // Initialise the owner of the contract to be the creator of the contract.
         N = 4;
@@ -84,5 +84,5 @@ contract SolveNQueens {
 
 // TemplateTestContract so the SolveContract knows the structure of the testContract.
 contract TemplateTestContract is ITemplateTestContract {
-    function test(address payable hunter) virtual external;
+    function test(address payable hunter) public;
 }

@@ -8,7 +8,7 @@ contract SolveContract {
     address payable owner;              // Create variable for the owner which solves the test contract.
 
     // Constructor to initialise the contract variables.
-    constructor(address testAddress) payable {              
+    constructor(address testAddress) public payable {              
         testContract = TemplateTestContract(testAddress);   // Initialise the testContract variable.
         owner = msg.sender;                                 // Initialise the owner of the contract to be the creator of the contract.
     }
@@ -32,5 +32,5 @@ contract SolveContract {
 
 // TemplateTestContract so the SolveContract knows the structure of the testContract.
 contract TemplateTestContract is ITemplateTestContract {
-    function test(address payable hunter) virtual external;
+    function test(address payable hunter) public;
 }
