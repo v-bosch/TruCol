@@ -29,12 +29,13 @@ contract SolveContract {
         }
     }
     
-    // Function to get the testContract
+    // Function to get the testContract.
     function getTestContract()  public view returns(TemplateTestContract) {
         return testContract;
     }
     
-        function getOwner() public view returns (address) { 
+    // Getter function to get the owner of this contract.
+    function getOwner() public view returns (address) { 
         return owner;
     }
 }

@@ -95,4 +95,3 @@ contract TestContract is VRFConsumerBase {
 abstract contract TemplateSolveContract {
     function main(uint x) virtual public returns (uint);
 }
-
