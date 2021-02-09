@@ -31,6 +31,6 @@ contract SolveContract {
 }
 
 // TemplateTestContract so the SolveContract knows the structure of the testContract.
-abstract contract TemplateTestContract {
+contract TemplateTestContract is ITemplateTestContract {
     function test(address payable hunter) virtual external;
 }

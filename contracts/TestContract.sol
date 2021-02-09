@@ -44,10 +44,9 @@ contract TestContract {
         require(msg.sender == owner && block.timestamp >= expiry, "Contract is not expired yet");   // The sender must own the contract and the contract must be expired.
         selfdestruct(owner);    // Let the contract selfdestruct and move the value to the owner.
     }
-
 }
 
 // TemplateSolveContract so the TestContract knows the structure of the SolveContract.
-abstract contract TemplateSolveContract {
-    function main(uint x) virtual public returns (uint);
+contract TemplateSolveContract is ITemplateSolveContract {
+	function main(uint x) virtual public returns (uint);
 }

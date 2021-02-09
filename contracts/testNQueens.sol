@@ -78,6 +78,6 @@ contract TestNQueens {
 }
 
 // TemplateSolveContract so the TestContract knows the structure of the SolveContract.
-abstract contract TemplateSolveContract {
+contract TemplateSolveContract is ITemplateSolveContract {
     function main(bool[][] memory x) virtual public returns (bool[][] memory);
 }
