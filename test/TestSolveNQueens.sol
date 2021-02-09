@@ -8,8 +8,7 @@ import "../contracts/SolveNQueens.sol";
 contract TestSolveNQueens{
 
   function testMain() public {
-    //SolveNQueens solveNQueens = SolveNQueens(DeployedAddresses.MetaCoin());
-	SolveNQueens solveNQueens = SolveNQueens(msg.sender);
+    SolveNQueens solveNQueens = SolveNQueens(DeployedAddresses.MetaCoin());
 	
 	// Declare dimension as input dimension
 	uint8 N = 4;
