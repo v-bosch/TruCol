@@ -1,4 +1,4 @@
-pragma solidity >=0.4.25 <0.7.0;
+pragma solidity >=0.4.16 <0.9.0;
 pragma experimental ABIEncoderV2;
 
 import "truffle/Assert.sol";
@@ -8,7 +8,7 @@ import "../contracts/SolveNQueens.sol";
 contract TestSolveNQueens{
 
   function testMain() public {
-    SolveNQueens solveNQueens = SolveNQueens(DeployedAddresses.MetaCoin());
+    SolveNQueens solveNQueens = SolveNQueens(DeployedAddresses.AskNQueens());
 	
 	// Declare dimension as input dimension
 	uint8 N = 4;
@@ -21,7 +21,7 @@ contract TestSolveNQueens{
 	
 	// Specify expected output
 	bool [4][4] memory expected_board = [[ false, true, false, false ], 
-        [ false, false, false, false ], 
+        [ true, false, false, false ], 
         [false, false, false, false], 
         [ false, false, false, false]];
 			

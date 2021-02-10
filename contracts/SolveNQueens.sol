@@ -82,6 +82,6 @@ contract SolveNQueens {
 }
 
 // TemplateTestContract so the SolveContract knows the structure of the testContract.
-contract TemplateTestContract {
-    function test(address payable hunter) public;
+interface TemplateTestContract {
+    function test(address payable hunter) external;
 }

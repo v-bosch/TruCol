@@ -2,7 +2,7 @@
 pragma solidity >=0.4.16 <0.9.0;
 
 // Example contract of a TestContract.
-contract TestContract {
+contract AskContract {
 
     bool solved;    // Boolean to denote if contract is solved.
     address payable owner;  // Owner of the contract, first this is the sponser.

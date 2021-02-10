@@ -7,6 +7,7 @@ import "../contracts/MetaCoin.sol";
 contract TestMetaCoin {
 
   function testInitialBalanceUsingDeployedContract() public {
+    // DeployedAddresses.MetaCoin() returns adress
     MetaCoin meta = MetaCoin(DeployedAddresses.MetaCoin());
 
     uint expected = 10000;

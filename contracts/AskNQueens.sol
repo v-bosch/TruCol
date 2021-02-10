@@ -4,7 +4,7 @@ pragma experimental ABIEncoderV2;
 
 // This contract sets out the bounty for a simple N-Queens problem (with N=4), to be solved by the "SolveNQueens" contract.
 
-contract TestNQueens {
+contract AskNQueens {
 
     bool[][]board;              // Chessboard
     uint8 N;                    // Number of queens  
@@ -78,6 +78,6 @@ contract TestNQueens {
 }
 
 // TemplateSolveContract so the TestContract knows the structure of the SolveContract.
-contract TemplateSolveContract {
-    function main(bool[][] memory x) public returns (bool[][] memory);
+interface TemplateSolveContract {
+    function main(bool[][] calldata x) external returns (bool[][] memory);
 }
