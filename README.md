@@ -1,4 +1,5 @@
 # TruCol
+[![Solidity version](https://img.shields.io/badge/Solidity-v0.8.1-ff69b4.svg?style=flat-square&maxAge=3600)](https://solidity.readthedocs.io/en/v0.8.1/installing-solidity.html)
 [![License: GPL v3](https://img.shields.io/badge/License-AGPLv3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Build Status](https://travis-ci.com/v-bosch/TruCol.svg?branch=main)](https://travis-ci.com/v-bosch/TruCol)
 TruCol aims at building a decentralized, trust-less platform for test-driven programming development.
