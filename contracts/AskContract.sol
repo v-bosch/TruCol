@@ -2,13 +2,13 @@
 pragma solidity >=0.4.16 <0.9.0;
 
 // Example contract of a TestContract.
-contract TestContract {
+contract AskContract {
 
     bool solved;    // Boolean to denote if contract is solved.
     address payable owner;  // Owner of the contract, first this is the sponser.
     uint expiry;        // Get the time when the contract expires.
 
-    constructor() payable {      // Constructor to initialise values.
+    constructor() public payable {      // Constructor to initialise values.
         solved = false;         //  Boolean value to indicate if contract is already solved.
         owner = msg.sender;     //  Set the owner of the contract to the creator of the contract.
         expiry = 1612569800;    //  Unix timestamp of the moment of expiry. 
@@ -44,10 +44,9 @@ contract TestContract {
         require(msg.sender == owner && block.timestamp >= expiry, "Contract is not expired yet");   // The sender must own the contract and the contract must be expired.
         selfdestruct(owner);    // Let the contract selfdestruct and move the value to the owner.
     }
-
 }
 
 // TemplateSolveContract so the TestContract knows the structure of the SolveContract.
-abstract contract TemplateSolveContract {
-    function main(uint x) virtual public returns (uint);
+contract TemplateSolveContract {
+	function main(uint x) public returns (uint);
 }

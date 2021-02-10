@@ -19,3 +19,30 @@ TestRefund:
 - Click on the TestContract and try to get the refund, when it is past your timestamp it should selfdestruct otherwise it should not work
 
 Note that only the owner of the contract (which is the person who either created or solved the contract) can activate the refund function.
+
+## Truffle Testing
+The solidity contracts can be tested with Truffle. Documentation is [here](https://www.trufflesuite.com/docs/truffle/getting-started/installation), video instructions is [here](https://www.youtube.com/watch?v=2fSPn0-8ORs) (starts at 1:34).
+ 
+
+### Installation Linux
+1. install npm on device
+```
+sudo apt install npm
+```
+2. Install truffle
+```
+sudo npm install -g truffle
+```
+3. Go into root folder and create a folder (chose to name it `metacoin`) put an example truffle test setup in there.
+```
+mkdir metacoin
+```
+4. Go into example folder and create the example truffle project.
+```
+cd metacoin
+truffle unbox metacoinx
+```
+5. Run truffle test to verify it works
+```
+truffle test
+```
