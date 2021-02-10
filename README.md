@@ -1,4 +1,6 @@
 # TruCol
+[![License: GPL v3](https://img.shields.io/badge/License-AGPLv3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![Build Status](https://travis-ci.com/v-bosch/TruCol.svg?branch=main)](https://travis-ci.com/v-bosch/TruCol)
 TruCol aims at building a decentralized, trust-less platform for test-driven programming development.
 
 
