@@ -38,35 +38,12 @@ The content of this repository is divided into three categories. The three liste
  - An approach to store a secret (used to prevent the bounty hunter from hardcoding solutions) using NuCypher is implemented [here](https://github.com/v-bosch/TruCol/tree/nucypher).
 
 ## Usage
- 1. To use the protocol, clone this repo, and modify the 
 
+To use the protocol, clone this repo, and modify the `test` and `checkQueens` function of the [sponsor contract](https://github.com/v-bosch/TruCol/blob/main/contracts/AskNQueens.sol) such that they contain the unit tests for your challenge (in NP). Next, we recommend you modify the [TestMetaCoin](https://github.com/v-bosch/TruCol/blob/main/test/TestMetaCoin.sol) or [TestSolveNQueens.sol](https://github.com/v-bosch/TruCol/blob/main/test/TestSolveNQueens.sol) to throw some solutions into your unit tests and check if they catch true and false solutions correctly. You can test your solidity contract with the unit tests using Truffle.
 
-## FAQ
-
-
-## Manual Testing
-TestContract consists of a square root problem and the SolveContract is able to solve the problem.
-
-Test:
-- Open both contracts in https://remix.ethereum.org
-- Compile (ctrl+s) and select the TestContract (Not the template!),  deploy it (optionally add a value to it)
-- Copy the contract address of the TestContract
-- Compile and select the SolveContract (Not the template!), paste the copied address in the deploy field and deploy it
-- Finally, click on the SolveContract and click on the 'solve' function
-- Now the funds should be transferred to the owner of the solvecontract
-
-TestRefund:
-- Change the expiry value in the contract to a future experidate (unix timestamp)
-- Compile and select the TestContract, deploy it with a value
-- Click on the TestContract and try to get the refund, when it is past your timestamp it should selfdestruct otherwise it should not work
-
-Note that only the owner of the contract (which is the person who either created or solved the contract) can activate the refund function.
-
-## Truffle Testing
-The solidity contracts can be tested with Truffle. Documentation is [here](https://www.trufflesuite.com/docs/truffle/getting-started/installation), video instructions is [here](https://www.youtube.com/watch?v=2fSPn0-8ORs) (starts at 1:34).
+### Truffle Testing
+Documentation is [here](https://www.trufflesuite.com/docs/truffle/getting-started/installation), video instructions is [here](https://www.youtube.com/watch?v=2fSPn0-8ORs) (starts at 1:34). The following installations are written for a Linux system:
  
-
-### Installation Linux
 1. install npm on device
 ```
 sudo apt install npm
@@ -75,16 +52,31 @@ sudo apt install npm
 ```
 sudo npm install -g truffle
 ```
-3. Go into root folder and create a folder (chose to name it `metacoin`) put an example truffle test setup in there.
-```
-mkdir metacoin
-```
-4. Go into example folder and create the example truffle project.
-```
-cd metacoin
-truffle unbox metacoinx
-```
-5. Run truffle test to verify it works
+5. Run truffle test to verify if your bounty contract works.
 ```
 truffle test
 ```
+
+## FAQ
+The frequently asked questions are discussed in detail in [FAQ](https://github.com/v-bosch/FAQ/).
+
+## Security
+We welcome critical evaluations of our protocol, and have found it a quite fun exercise to analyse the attack surfaces of the various possible implementations of the protocol. To do so, please have a look [here](https://github.com/v-bosch/FAQ/security) to check if your concern is already treated, and if not, feel free to raise an issue or even pull request that addresses the security concern.
+
+## Manual Testing
+Besides the automated testing using Truffle, you can also manually test your smart contracts. To do so you can look at [AskContract](https://github.com/v-bosch/TruCol/blob/main/contracts/AskContract.sol) which consists of a square root problem and the [SolveContract](https://github.com/v-bosch/TruCol/blob/main/contracts/SolveContract.sol) which is able to solve the problem.
+
+Test:
+- Open both contracts in https://remix.ethereum.org
+- Compile (ctrl+s) and select the AskContract (Not the template!),  deploy it (optionally add a value to it)
+- Copy the contract address of the AskContract
+- Compile and select the SolveContract (Not the template!), paste the copied address in the deploy field and deploy it
+- Finally, click on the SolveContract and click on the 'solve' function
+- Now the funds should be transferred to the owner of the solvecontract
+
+TestRefund:
+- Change the expiry value in the contract to a future experidate (unix timestamp)
+- Compile and select the AskContract, deploy it with a value
+- Click on the AskContract and try to get the refund, when it is past your timestamp it should selfdestruct otherwise it should not work
+
+Note that only the owner of the contract (which is the person who either created or solved the contract) can activate the refund function.
