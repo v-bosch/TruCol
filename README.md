@@ -4,7 +4,7 @@ TruCol aims at building a decentralized, trust-less platform for test-driven pro
 
 ## Description
 
-Suppose Alice wants some well-defined challenge, e.g. solve an `nxn` Sudoku, to be solved and writes a set of unit tests that check any solution using random inputs. Instead of creating the solution, Alice publishes the unit tests in a smart contract and sets a bounty for any other smart contract that solves it. Bob the bounty hunter can then see the contract and write a solution in a smartcontract and get the reward. This repository presents the protocol to do this completeley trustless and decentralised without taking any fees, increasing market efficiency.
+Suppose Alice wants some well-defined challenge, e.g. solve an 'n*n' Sudoku, to be solved and writes a set of unit tests that check any solution using random inputs. Instead of creating the solution, Alice publishes the unit tests in a smart contract and sets a bounty for any other smart contract that solves it. Bob the bounty hunter can then see the contract and write a solution in a smart contract and get the reward. This repository presents the protocol to do this completely trustless and decentralised without taking any fees, increasing market efficiency.
 
 ![1](./FAQ/concept.png)
 
@@ -16,12 +16,12 @@ Suppose Alice wants some well-defined challenge, e.g. solve an `nxn` Sudoku, to 
 
 ## Weaknesses
 
-0. Currently the fully trustless decentralised version of the protocol is only implemented in Solididty to Solidity. This is  a significant constraint on the adoptability as most test-driven development happens in other languages like Python/C etc. [Issue 5](https://github.com/v-bosch/TruCol/issues/5) describes how the protocol can be expanded to facilitate other languages
+0. Currently, the fully trustless decentralised version of the protocol is only implemented in Solidity to Solidity. This is  a significant constraint on the adoptability as most test-driven development happens in other languages like Python/C etc. [Issue 5](https://github.com/v-bosch/TruCol/issues/5) describes how the protocol can be expanded to facilitate other languages
 1. The costs of evaluating unit tests and solutions on chain can be significant. Scalability in costs through expansion of the chain of trust and/or allowing users to reduce decentralisation might allow users to make their own decision on "safety/costs".
 2. *The bias in "the hiring process" is only removed for test driven development jobs.
 3. *The bias in "the hiring process" is still present based on the language that sponsors write their code in. Additionally, bounty hunters and sponsors still require access to the internet to enter this free market.
 4. Documentation of code can be/is important yet cannot (yet) be fully deterministically/reliably be assessed on quality in this protocol.
-5. Code readibility (e.g. sensible variable names) is not yet completely deterministically/reliably assisible in this protocol.
+5. Code readability (e.g. sensible variable names) is not yet completely deterministically/reliably assessable in this protocol.
 
 ## Content
 The content of this repository is divided into three categories. The three listed potentially somewhat overlapping applications of decentralisation technologies are developed to give the user a wider range of choice.
@@ -33,8 +33,8 @@ The content of this repository is divided into three categories. The three liste
  - Additionally a website is written in NodeJS that makes writing their bounty contracts and solidity unit tests as simple as possible. Simplification is done by providing solidity contract templates, (gas costs estimates and through automated Truffle unit testing using Travis-CI (future work)) in branch [nodey-docker](https://github.com/v-bosch/TruCol/tree/nodey-docker).
 
 ### Decentralisation techniques
- - Randomness (used to prevent the bounty hunter from hardcoding solutions) is absorbed from Chainlinks VRF in branch [poly-sol](https://github.com/v-bosch/TruCol/tree/poly-sol).
- - An approach to perform api-calls to github to [facilitate all languages (instead of Solidity only)](https://github.com/v-bosch/TruCol/issues/5) using Tellor is included in branch [tellor](https://github.com/v-bosch/TruCol/tree/tellor).
+ - Randomness (used to prevent the bounty hunter from hardcoding solutions) is absorbed from Chainlinks' VRF in branch [poly-sol](https://github.com/v-bosch/TruCol/tree/poly-sol).
+ - An approach to perform api-calls to GitHub to [facilitate all languages (instead of Solidity only)](https://github.com/v-bosch/TruCol/issues/5) using Tellor is included in branch [tellor](https://github.com/v-bosch/TruCol/tree/tellor).
  - An approach to store a secret (used to prevent the bounty hunter from hardcoding solutions) using NuCypher is implemented [here](https://github.com/v-bosch/TruCol/tree/nucypher).
 
 ## Usage
@@ -67,12 +67,12 @@ Test:
 - Copy the contract address of the AskContract
 - Compile and select the SolveContract (Not the template!), paste the copied address in the deploy field and deploy it
 - Finally, click on the SolveContract and click on the 'solve' function
-- Now the funds should be transferred to the owner of the solvecontract
+- Now the funds should be transferred to the owner of the SolveContract
 
 TestRefund:
 - Change the expiry value in the contract to a future experidate (unix timestamp)
 - Compile and select the AskContract, deploy it with a value
-- Click on the AskContract and try to get the refund, when it is past your timestamp it should selfdestruct otherwise it should not work
+- Click on the AskContract and try to get the refund, when it is past your timestamp it should self-destruct otherwise it should not work
 
 Note that only the owner of the contract (which is the person who either created or solved the contract) can activate the refund function.
 
@@ -80,5 +80,5 @@ Note that only the owner of the contract (which is the person who either created
 The frequently asked questions are discussed in detail in [FAQ](https://github.com/v-bosch/TruCol/blob/main/FAQ/FAQ.md).
 
 ## Security
-We welcome critical evaluations of our protocol, and have found it a quite fun exercise to analyse the attack surfaces of the various possible implementations of the protocol. To do so, please have a look [here](https://github.com/v-bosch/TruCol/blob/main/FAQ/Security.md) to check if your concern is already treated, and if not, feel free to raise an issue or even pull request that addresses the security concern.
+We welcome critical evaluations of our protocol, and have found it quite a fun exercise to analyse the attack surfaces of the various possible implementations of the protocol. To do so, please have a look [here](https://github.com/v-bosch/TruCol/blob/main/FAQ/Security.md) to check if your concern is already treated, and if not, feel free to raise an issue or even pull request that addresses the security concern.
 
