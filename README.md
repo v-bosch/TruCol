@@ -15,18 +15,25 @@ Suppose Alice wants some well-defined challenge, e.g. solve an `nxn` Sudoku, to 
  - Presenting a protocol instead of a service makes the free market for test driven development (significantly more) resilient against takedowns.
 
 ## Weaknesses
+
 0. Currently the fully trustless decentralised version of the protocol is only implemented in Solididty to Solidity. This is  a significant constraint on the adoptability as most test-driven development happens in other languages like Python/C etc. [Issue 5](https://github.com/v-bosch/TruCol/issues/5) describes how the protocol can be expanded to facilitate other languages
 1. The costs of evaluating unit tests and solutions on chain can be significant. Scalability in costs through expansion of the chain of trust and/or allowing users to reduce decentralisation might allow users to make their own decision on "safety/costs".
 2. *The bias in "the hiring process" is only removed for test driven development jobs.
 3. *The bias in "the hiring process" is still present based on the language that sponsors write their code in. Additionally, bounty hunters and sponsors still require access to the internet to enter this free market.
+4. Documentation of code can be/is important yet cannot (yet) be fully deterministically/reliably be assessed on quality in this protocol.
+5. Code readibility (e.g. sensible variable names) is not yet completely deterministically/reliably assisible in this protocol.
 
 ## Content
 
  - This repository contains three pairs of solidity contracts of which two pairs are a proof of concept of the protocol. The third set/pair of contracts is the `metacoin` Truffle unit testing example that shows how to write unit tests for solidity contracts. 
- - Additionally a website is written in NodeJS that makes writing their bounty contracts and solidity unit tests as simple as possible.
-
+ - Additionally a website is written in NodeJS that makes writing their bounty contracts and solidity unit tests as simple as possible. Simplification is done by providing solidity contract templates, (gas costs estimates and through automated Truffle unit testing using Travis-CI (future work)) in branch [nodey-docker](https://github.com/v-bosch/TruCol/tree/nodey-docker).
+ - Randomness (used to prevent the bounty hunter from hardcoding solutions) is absorbed from Chainlinks VRF in branch [poly-sol](https://github.com/v-bosch/TruCol/tree/poly-sol).
+ - An approach to perform api-calls to github to [facilitate all languages (instead of Solidity only)](https://github.com/v-bosch/TruCol/issues/5) using Tellor is included in branch [tellor](https://github.com/v-bosch/TruCol/tree/tellor).
+ - An approach to store a secret (used to prevent the bounty hunter from hardcoding solutions) using NuCypher is implemented [here](https://github.com/v-bosch/TruCol/tree/nucypher).
 
 ## Usage
+ 1. To use the protocol, clone this repo, and modify the 
+
 
 ## FAQ
 
