@@ -1,0 +1,6 @@
+#!/home/a/Documents/compete/git/nucypher/nucypher-venv/bin/python
+
+from hendrix.ux import main
+
+if __name__ == "__main__":
+    main()
