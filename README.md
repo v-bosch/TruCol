@@ -77,8 +77,8 @@ TestRefund:
 Note that only the owner of the contract (which is the person who either created or solved the contract) can activate the refund function.
 
 ## FAQ
-The frequently asked questions are discussed in detail in [FAQ](https://github.com/v-bosch/FAQ/).
+The frequently asked questions are discussed in detail in [FAQ](https://github.com/v-bosch/TruCol/blob/main/FAQ/FAQ.md).
 
 ## Security
-We welcome critical evaluations of our protocol, and have found it a quite fun exercise to analyse the attack surfaces of the various possible implementations of the protocol. To do so, please have a look [here](https://github.com/v-bosch/FAQ/security) to check if your concern is already treated, and if not, feel free to raise an issue or even pull request that addresses the security concern.
+We welcome critical evaluations of our protocol, and have found it a quite fun exercise to analyse the attack surfaces of the various possible implementations of the protocol. To do so, please have a look [here](https://github.com/v-bosch/TruCol/blob/main/FAQ/Security.md) to check if your concern is already treated, and if not, feel free to raise an issue or even pull request that addresses the security concern.
 
