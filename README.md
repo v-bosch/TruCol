@@ -57,13 +57,8 @@ sudo npm install -g truffle
 truffle test
 ```
 
-## FAQ
-The frequently asked questions are discussed in detail in [FAQ](https://github.com/v-bosch/FAQ/).
+### Manual Testing
 
-## Security
-We welcome critical evaluations of our protocol, and have found it a quite fun exercise to analyse the attack surfaces of the various possible implementations of the protocol. To do so, please have a look [here](https://github.com/v-bosch/FAQ/security) to check if your concern is already treated, and if not, feel free to raise an issue or even pull request that addresses the security concern.
-
-## Manual Testing
 Besides the automated testing using Truffle, you can also manually test your smart contracts. To do so you can look at [AskContract](https://github.com/v-bosch/TruCol/blob/main/contracts/AskContract.sol) which consists of a square root problem and the [SolveContract](https://github.com/v-bosch/TruCol/blob/main/contracts/SolveContract.sol) which is able to solve the problem.
 
 Test:
@@ -80,3 +75,10 @@ TestRefund:
 - Click on the AskContract and try to get the refund, when it is past your timestamp it should selfdestruct otherwise it should not work
 
 Note that only the owner of the contract (which is the person who either created or solved the contract) can activate the refund function.
+
+## FAQ
+The frequently asked questions are discussed in detail in [FAQ](https://github.com/v-bosch/FAQ/).
+
+## Security
+We welcome critical evaluations of our protocol, and have found it a quite fun exercise to analyse the attack surfaces of the various possible implementations of the protocol. To do so, please have a look [here](https://github.com/v-bosch/FAQ/security) to check if your concern is already treated, and if not, feel free to raise an issue or even pull request that addresses the security concern.
+
