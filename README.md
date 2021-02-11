@@ -24,9 +24,15 @@ Suppose Alice wants some well-defined challenge, e.g. solve an `nxn` Sudoku, to 
 5. Code readibility (e.g. sensible variable names) is not yet completely deterministically/reliably assisible in this protocol.
 
 ## Content
+The content of this repository is divided into three categories. The three listed potentially somewhat overlapping applications of decentralisation technologies are developed to give the user a wider range of choice.
 
+### Protocol
  - This repository contains three pairs of solidity contracts of which two pairs are a proof of concept of the protocol. The third set/pair of contracts is the `metacoin` Truffle unit testing example that shows how to write unit tests for solidity contracts. 
+ 
+### GUI/website
  - Additionally a website is written in NodeJS that makes writing their bounty contracts and solidity unit tests as simple as possible. Simplification is done by providing solidity contract templates, (gas costs estimates and through automated Truffle unit testing using Travis-CI (future work)) in branch [nodey-docker](https://github.com/v-bosch/TruCol/tree/nodey-docker).
+
+### Decentralisation techniques
  - Randomness (used to prevent the bounty hunter from hardcoding solutions) is absorbed from Chainlinks VRF in branch [poly-sol](https://github.com/v-bosch/TruCol/tree/poly-sol).
  - An approach to perform api-calls to github to [facilitate all languages (instead of Solidity only)](https://github.com/v-bosch/TruCol/issues/5) using Tellor is included in branch [tellor](https://github.com/v-bosch/TruCol/tree/tellor).
  - An approach to store a secret (used to prevent the bounty hunter from hardcoding solutions) using NuCypher is implemented [here](https://github.com/v-bosch/TruCol/tree/nucypher).
