@@ -12,12 +12,22 @@ See concern above.
 An example of this protocol is included in the main git, e.g. the pair of NQueens contracts. The bounty contract and sponsor contract are both soldidity. The randomness that generates the random inputs can be queries using VRF of Chainlink, this means the bounty hunter cannot predict the inputs and hence must actually solve the challenge. Concerns raised (and accompanying mitigation) are:
 
 0.a But then the bounty hunter can just send a fake solution, get the randomness and hardcode it to resubmit.
+
 0.b The sponsor contract is terminated after it is evaluated regardless of payout, hence the sponsor would have to create a new smart contract that queries new VFR.
+
+
 1.a But based on 0.a, the bounty hunter could give the sponsor unwanted costs to make the sponsor have to set up the bounty contract over and over.
+
 1.b That is why the bounty hunter must pay the fee to set up and evaluate the smartcontract of the bounty hunter to submit a solution (this can be compensated if the bounty is payed out succesfully).
+
+
 2.a What if the sponsor sets up fake tests that do not pass on valid input to simply read of the solution in the smart contract of the bounty hunter without having to pay out?
+
 2.b It is the responsibility of the bounty hunter to verify whether the unit tests are correct, if they are not, the bounty hunter should not work on it and not send a solution (if it is rational).
+
+
 3.a So what stops the sponsor from writing out very difficult to understand contracts making it very difficult for bounty hunters to determine if the tests are right or not?
+
 3.b Nothing, but it costs the sponsor money to deploy a bounty contract, and bounty hunters can simply not work on it if it is not well written.
 
 
