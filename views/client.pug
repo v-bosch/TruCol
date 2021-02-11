@@ -1,0 +1,22 @@
+extends layout
+
+
+block content
+    script(src="javascripts/codemirror.js")
+    script(src="javascripts/codemirror-solidity/solidity.js") 
+    script(src="javascripts/hunter.js")
+    link(rel="stylesheet", href="javascripts/codemirror-solidity/codemirror.css")
+    link(rel="stylesheet", href="javascripts/codemirror-solidity/solidity.css")
+    link(rel="stylesheet", href="stylesheets/hunter.css")
+    h1 Employer interface
+    h2 Code
+    //- button#codeToggle Hide
+    textArea#code
+    h2 Deployment
+    form(action='/deploy/hunter', method='POST')
+        label(for='walletId') Wallet ID
+            input#walletId(type='text', name='walletId', value='', placeholder="hash fo wallet id" required)
+        br
+        label(for="gasLimit") Gas limit (Gwei) 
+        input#gasLimit(type="number", name="gasLimit", value=2000 required) 
+        button Deploy
