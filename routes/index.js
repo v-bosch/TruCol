@@ -10,4 +10,8 @@ router.get('/hunter', function(req, res, next) {
   res.render('hunter', { title: 'TruCol' });
 })
 
+router.get('/client', function(req, res, next) {
+  res.render('client', { title: 'TruCol' });
+})
+
 module.exports = router;
