@@ -20,10 +20,18 @@ contract("UsingTellor Tests", function (accounts) {
   });
 
   it("Update Price", async function () {
-    const requestId = 1;
-    const mockValue = "7000000";
+    const requestId = 1; // assumes the first ID of the list of tellor variable contains what we return, e.g. usd/BTC (in our case, checkflag text)
+    const mockValue = "1000"; // original value that was expected
+	const assert_error_val = "404" // throw an error
+	
+	//const mockValue = "build:passed" // modified to associated text of Travis CI checkflag
+	// checkflag taken from: https://travis-ci.com/github/v-bosch/TruCol/builds/216834098
+	// checkflag data taken from: Firefox>open url>rmb on image>View image info>Associated Text
+	//const mockValue = "build:errored" // modified to associated text of Travis CI checkflag
+	
     await tellorOracle.submitValue(requestId, mockValue);
     let retrievedVal = await sampleUsingTellor.readTellorValue(requestId);
-    assert.equal(retrievedVal.toString(), mockValue);
+    //assert.equal(retrievedVal.toString(), mockValue); // original test
+	assert.equal(retrievedVal.toString(), assert_error_val);
   });
 });

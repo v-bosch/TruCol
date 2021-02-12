@@ -17,7 +17,7 @@ contract SampleUsingTellor is UsingTellor {
         (bool ifRetrieve, uint256 value, uint256 _timestampRetrieved) =
             getCurrentValue(_tellorID);
         if (!ifRetrieve) return 0;
-        return value;
+        return value+55; // modified
     }
 
     function readTellorValueBefore(uint256 _tellorId, uint256 _timestamp)
