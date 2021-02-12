@@ -34,6 +34,8 @@ h1 {
   text-align: center;
 }
 
+
+
 input[type="text"],
 input[type="password"],
 input[type="date"],
@@ -44,6 +46,7 @@ input[type="search"],
 input[type="tel"],
 input[type="time"],
 input[type="url"],
+textarea,
 select {
   background: rgba(255, 255, 255, 0.1);
   border: none;
@@ -57,6 +60,11 @@ select {
   color: #8a97a0;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03) inset;
   margin-bottom: 30px;
+}
+
+
+input.form-control-plaintext {
+  background-color:#f4f7f8;
 }
 
 input[type="radio"],
@@ -98,6 +106,12 @@ legend {
 label {
   display: block;
   margin-bottom: 8px;
+}
+
+/* .row label, */
+.form-check label
+{
+  display:inline;
 }
 
 label.light {
