@@ -21,17 +21,31 @@ contract("UsingTellor Tests", function (accounts) {
 
   it("Update Price", async function () {
     const requestId = 1; // assumes the first ID of the list of tellor variable contains what we return, e.g. usd/BTC (in our case, checkflag text)
-    const mockValue = "1000"; // original value that was expected
-	const assert_error_val = "404" // throw an error
+    
+	// numerical js encoding of "build:passed" to be done by oracles when calling html content
+	const expected_passed_check_flag = "30471473131337998138141271451"; // computed manually with encode function
 	
-	//const mockValue = "build:passed" // modified to associated text of Travis CI checkflag
+	// -----------------------------------------Simulate API Call of Tellor Oracles ----------------------------
 	// checkflag taken from: https://travis-ci.com/github/v-bosch/TruCol/builds/216834098
-	// checkflag data taken from: Firefox>open url>rmb on image>View image info>Associated Text
+	// via Firefox>open url>rmb on image>View image info>Associated Text
+	const check_flag_passed= "build:passed" // modified to associated text of Travis CI checkflag
 	//const mockValue = "build:errored" // modified to associated text of Travis CI checkflag
 	
+	// Source: https://stackoverflow.com/questions/14346829/is-there-a-way-to-convert-a-string-to-a-base-10-number-for-encryption
+	function encode(string) {
+		var number = "0x";
+		var length = string.length;
+		for (var i = 0; i < length; i++)
+			number += string.charCodeAt(i).toString(16);
+		return number;
+	}
+	
+	// compute output of Tellor oracles
+	const mockValue = encode(check_flag_passed)
+	
+	// -----------------------------------------Verify the contract returns the correct retrieved value ----------------------------
     await tellorOracle.submitValue(requestId, mockValue);
     let retrievedVal = await sampleUsingTellor.readTellorValue(requestId);
-    //assert.equal(retrievedVal.toString(), mockValue); // original test
-	assert.equal(retrievedVal.toString(), assert_error_val);
+	assert.equal(retrievedVal.toString(), expected_passed_check_flag);
   });
 });
