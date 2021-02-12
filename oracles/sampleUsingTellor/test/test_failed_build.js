@@ -22,14 +22,15 @@ contract("UsingTellor Tests", function (accounts) {
   it("Update Price", async function () {
     const requestId = 1; // assumes the first ID of the list of tellor variable contains what we return, e.g. usd/BTC (in our case, checkflag text)
     
-	// numerical js encoding of "build:passed" to be done by oracles when calling html content
-	const expected_passed_check_flag = "30471473131337998138141271451"; // computed manually with encode function
+	// uint256 returned by sponsor contract to show the contract understands the result from the Tellor oracles.
+	// 1 means the contract knows the Travis CI repo of the build failed, 2 means passed build.
+	const expected_passed_check_flag = "1";
 	
 	// -----------------------------------------Simulate API Call of Tellor Oracles ----------------------------
 	// checkflag taken from: https://travis-ci.com/github/v-bosch/TruCol/builds/216834098
 	// via Firefox>open url>rmb on image>View image info>Associated Text
-	const check_flag_passed= "build:passed" // modified to associated text of Travis CI checkflag
-	//const mockValue = "build:errored" // modified to associated text of Travis CI checkflag
+	//const check_flag_passed= "build:passed" // modified to associated text of Travis CI checkflag
+	const check_flag_passed = "build:errored" // modified to associated text of Travis CI checkflag
 	
 	// Source: https://stackoverflow.com/questions/14346829/is-there-a-way-to-convert-a-string-to-a-base-10-number-for-encryption
 	function encode(string) {
@@ -39,6 +40,7 @@ contract("UsingTellor Tests", function (accounts) {
 			number += string.charCodeAt(i).toString(16);
 		return number;
 	}
+	//const expected_passed_check_flag = encode("build:errored")
 	
 	// compute output of Tellor oracles
 	const mockValue = encode(check_flag_passed)
