@@ -41,8 +41,12 @@ contract("UsingTellor Tests", function (accounts) {
 	const file = fs.createWriteStream("file.txt");
 	const request = http.get(url, function(response) {
 		response.pipe(file);
-	});
 
+		response.on('end', function () {
+			console.log('Finished');
+			completeTest();
+		});
+	});
 
 	// https://stackoverflow.com/questions/11944932/how-to-download-a-file-with-node-js-without-using-third-party-libraries
 	// var http = require('https');
@@ -99,13 +103,17 @@ contract("UsingTellor Tests", function (accounts) {
 		return number;
 	}
 	//const expected_passed_check_flag = encode("build:errored")
+
+	async function completeTest()	{
 	
 	// compute output of Tellor oracles
-	const mockValue = encode(unit_test_file_content)
+	const mockValue = encode(unit_test_file_content);
 	
 	// -----------------------------------------Verify the contract returns the correct retrieved value ----------------------------
     await tellorOracle.submitValue(requestId, mockValue);
     let retrievedVal = await sampleUsingTellor.readTellorValue(requestId);
+
 	assert.equal(retrievedVal.toString(), expected_passed_check_flag);
+	}
   });
 });
