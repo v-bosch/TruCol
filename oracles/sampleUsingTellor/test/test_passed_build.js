@@ -29,8 +29,8 @@ contract("UsingTellor Tests", function (accounts) {
 	// -----------------------------------------Simulate API Call of Tellor Oracles ----------------------------
 	// checkflag taken from: https://travis-ci.com/github/v-bosch/TruCol/builds/216834098
 	// via Firefox>open url>rmb on image>View image info>Associated Text
-	const check_flag_passed= "build:passed" // modified to associated text of Travis CI checkflag
-	//const check_flag_passed = "build:errored" // modified to associated text of Travis CI checkflag
+	const check_flag_passed = "build:passed" // modified to associated text of Travis CI checkflag
+	//const check_flag_failed = "build:errored" // modified to associated text of Travis CI checkflag
 	
 	// Source: https://stackoverflow.com/questions/14346829/is-there-a-way-to-convert-a-string-to-a-base-10-number-for-encryption
 	function encode(string) {

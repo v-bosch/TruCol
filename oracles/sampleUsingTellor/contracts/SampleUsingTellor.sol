@@ -16,7 +16,7 @@ contract SampleUsingTellor is UsingTellor {
         //Helper function to get latest available value for that Id
         (bool ifRetrieve, uint256 value, uint256 _timestampRetrieved) =
             getCurrentValue(_tellorID);
-        if (!ifRetrieve) return 0;
+        if (!ifRetrieve) return value;
 		
 		
 		// numerical js encoding of "build:passed" to be done by oracles when calling html content
@@ -31,7 +31,9 @@ contract SampleUsingTellor is UsingTellor {
 			return 2;
 		if (value == build_failed)
 			return 1;
-        return 0; // error thrown during build status query
+        return value; // error thrown during build status query
+		
+		
     }
 
     function readTellorValueBefore(uint256 _tellorId, uint256 _timestamp)
