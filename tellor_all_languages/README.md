@@ -1,11 +1,13 @@
 # Trucol Adaptation of Teller Sample Project
-This is a modification of the Tellor Sample Project repository to realise two functionalities using the Tellor Oracle system:
+This is a modification of the Tellor Sample Project repository to realise three functionalities using the Tellor Oracle system. These functionalities are to check if the latest commit to the bounty hunter fork of the sponsor repository:
 
-0. Read out the (Travis) CI pass flag from a repository branch, e.g. from here: https://travis-ci.com/v-bosch/TruCol.svg?branch=main&amp
-1. Read out the content of a list of files in a repository branch. E.g. from here: https://github.com/jfrog/jfrog-docker-repo-simple-example
+0. passes the Travis CI build (and hence accompanying unit tests of the sponsor).
+1. did not add any files w.r.t. the code skeleton provided by the sponsor.
+2. did not tamper any of the test files created in the sponsor repository.
 
-To do this, first custom instructions to run in Ubuntu from the TruCol repository are included. These are followed by the description of an approach to realise these functionalities. The original readme of the unmodified source repository of this code is [here](https://github.com/tellor-io/sampleUsingTellor) and [this](https://docs.tellor.io/tellor/) is the documentation.
+To do this, instructions are included to simulate- and test a Tellor oracle network that performs those 3 queries and outputs the query-result to a sponsorcontract. These instructions are followed by instructions for the Travis API that is currently used by the simulated Tellor oracles to query the build status of the bounty hunter repo. Since the 3 queries are implemented in node.js test files the specification of these test files is included next. And an overview of the TODOs that remain before the new Tellor datafeed can be requested concludes this readme. 
 
+F.Y.I. The original readme of the unmodified source repository of the code in this folder is [here](https://github.com/tellor-io/sampleUsingTellor) and [this](https://docs.tellor.io/tellor/) is the documentation.
 
 ## TruCol Installation Instructions
 0. Open Terminal, go to the root of the TruCol directory.
