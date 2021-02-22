@@ -376,5 +376,3 @@ logs
 
 # Tellor
 tellor_all_languages/curled_test_data/*
-tellor_all_languages/package-lock.json
-tellor_all_languages/package.json
