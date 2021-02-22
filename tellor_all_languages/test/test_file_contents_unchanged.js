@@ -80,7 +80,6 @@ contract("UsingTellor Tests", function (accounts) {
 	// TODO: copy to test_file_contents_changed.js once the remainder TODO's are processed
 	//const branch_hunter = "attack_unit_test"
 	//const commit_hunter = "ede9a66a551b105f83e73f4274a3f9dbea7df6ff"
-	// TODO: change to separate branch: no_filecontent_attack
 	const branch_hunter = "no_attack_in_filecontent"
 	const commit_hunter = "0225ac36b43b0158c6cd95668b4622dbb73ebd3e"
 	
@@ -97,7 +96,6 @@ contract("UsingTellor Tests", function (accounts) {
 	const expected_sponsor_contract_output = 2
 	
 	// Specify local output location of curled data
-	// TODO: move into subfolder
 	var test_output_folder = "curled_test_data"
 	var test_type = "file_contents"
 	var test_case = "unchanged"
@@ -119,8 +117,6 @@ contract("UsingTellor Tests", function (accounts) {
 	var differences_filename =test_output_folder+"/"+test_type+"/"+test_case+"/"+test_type+"_"+test_case+".txt"
 	
 	// Specify output location of repository file lists
-	// TODO: move into subfolder
-	// TODO: refactor into names that contain test type
 	// TODO: get single file list from unmutable filelist file in repo of sponsor
 	var hunter_filelist_filepath = test_output_folder+"/"+test_type+"/"+test_case+"/hunter_filelist.txt"
 	var sponsor_filelist_filepath = test_output_folder+"/"+test_type+"/"+test_case+"/sponsor_filelist.txt"
@@ -147,7 +143,6 @@ contract("UsingTellor Tests", function (accounts) {
 	// combine the commands that curl a file from the hunter and bounter repository commits respectively, and export the difference
 	// in their file content
 	// TODO: APPEND the differences for each file pair
-	// TODO: delete the output file before starting this run
 	var command_per_line = curl_hunter_files+" > "+hunter_filecontent_path+" && "+curl_sponsor_files+" > "+sponsor_filecontent_path+" && diff "+hunter_filecontent_path+" "+sponsor_filecontent_path+" > "+differences_filename
 	
 	// Print the final command that outputs the differences
@@ -164,7 +159,7 @@ contract("UsingTellor Tests", function (accounts) {
 	var export_sponsor_files = file_list_sponsor_repo  +" > "+sponsor_filelist_filepath
 	
 	// remove artifacts from file lists from repos
-	// TODO: specify in name that it is a command
+	// TODO: specify in var name that it is a command
 	var remove_artifacts_hunter = "sed -i -e 's/\x22,//g' "+hunter_filelist_filepath+" && sed -i -e 's/\x22path\x22: \x22//g' "+hunter_filelist_filepath
 	var remove_artifacts_sponsor = "sed -i -e 's/\x22,//g' "+sponsor_filelist_filepath+" && sed -i -e 's/\x22path\x22: \x22//g' "+sponsor_filelist_filepath
 	
