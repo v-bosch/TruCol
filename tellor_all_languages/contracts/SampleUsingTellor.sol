@@ -21,8 +21,8 @@ contract SampleUsingTellor is UsingTellor {
 		
 		// numerical js encoding of "build:passed" to be done by oracles when calling html content
 		 // computed manually with encode function from test_passed_build.js
-		 uint256 build_passed = 1977021617296970;
-		 uint256 build_failed = 1801097065158218;		 
+		 uint256 build_passed = 20567952817047602405181711716;
+		 uint256 build_failed = 20567952817047591409897203044;		 
 		 
 		 // Check if build passed or not (based on hardcoded encoding of string build:passed
 		if (value == build_passed)

@@ -52,33 +52,59 @@ contract("UsingTellor Tests", function (accounts) {
 	   }
 	}
 	var os = new os_func();
-	
+
+	function create_output_dir(dir) {	
+		var fs = require('fs');
+
+		if (!fs.existsSync(dir)){
+			fs.mkdirSync(dir);
+		}
+	}	
 		
+	
 	// -----------------------------------------Specify Tellor Oracles Data Sources ----------------------------
 	// Read whether a travis build has failed or passed
 	const github_username = "v-bosch"
 	const github_repository_name = "sponsor_example"
-	const github_branch_name = "passing_build"
-		
+	const github_commit = "c4c8490017a2b859e973c0be6bab3dbe8bccbc2c"
+	
+	
+	// -----------------------------------------Specify Temporary input and output (files)------------------------
 	// Show the contract contains the logic to identify a correct build fail/pass. 
 	// If the build passes, a uint256 of value 2 is expected 
 	// from the contract. Otherwise a uint of value 1 is expected.
-	const expected_sponsor_contract_output = 2
+	const expected_sponsor_contract_output = 1
+	
+	// Specify local output location of curled data
+	var test_output_folder = "curled_test_data"
+	var test_type = "build_status"
+	var test_case = "failed"
+	var output_filename = test_output_folder+"/"+test_type+"/"+test_case+"/"+test_type+"_"+test_case+".json"
+	
+	// Empty test output folder before using it
+	var rimraf = require("rimraf"); //npm install rimraf
+	rimraf(test_output_folder, function () { console.log("Removed the old content of the temporary output directory.\n"); });
+	
+	// TODO: do not hardcode the folder deletion time
+	await new Promise(resolve => setTimeout(resolve, 2000));
+	
+	// (Re-)create temporary test output folder for curled data
+	create_output_dir(test_output_folder)
+	create_output_dir(test_output_folder+"/"+test_type)
+	create_output_dir(test_output_folder+"/"+test_type+"/"+test_case)
 	
 	
 	// -----------------------------------------Get The Tellor Oracles Data With Shell --------------------------
-	// Specify local output location of curled data
-	var test_case = "pass"
-	var test_type = "build_status"
-	var output_filename = test_type+"_"+test_case+".txt"
-	
 	// Specify travis api command that gets the build status and stores its result in an output file.
 	// travis history -r v-bosch/sponsor_example --com --token $COM_TRAVIS_TOKEN
 	// TODO: export your travis token in terminal before running this with:COM_TRAVIS_TOKEN="YOURPERSONALTRAVISCODE"
 	// TODO: get that code from command:`travis token --pro` or with `--org` or `--com` options.
-	var get_build_status_command ="travis status -r "+github_username+"/"+github_repository_name+" --com --token $COM_TRAVIS_TOKEN > "+output_filename
-	console.log("The shell command that gets the build status is:")
+	//var get_build_status_command ="travis status -r "+github_username+"/"+github_repository_name+" --com --token $COM_TRAVIS_TOKEN > "+output_filename
+	var get_build_status_command = "GET https://api.github.com/repos/"+github_username+"/"+github_repository_name+"/commits/"+github_commit+"/check-runs > "+output_filename
+
+	console.log("The shell command that gets the build failed status is:")
 	console.log(get_build_status_command)
+	console.log("")
 	
 	// Run the shell command that stores the Travis build status into a file
 	os.execCommand(get_build_status_command).then(res=> {
@@ -93,18 +119,23 @@ contract("UsingTellor Tests", function (accounts) {
 	
 	
 	// -----------------------------------------Process The Tellor Oracles Data With Shell ------------------------
-	// Read out the Travis build status that is outputed to a file, from the file.
+	// Read out the Travis build status that is outputed to a file, from the file.	
 	var fs = require('fs');
-	var curled_build_status = fs.readFileSync(output_filename);
-	var curled_build_status_string = curled_build_status.toString();
+	var obj = JSON.parse(fs.readFileSync(output_filename, 'utf8'));
+	var curled_build_status = obj["check_runs"][0]["output"]["title"].toString()
+	
+	// print the build status that is read
 	console.log("The build status of the bounty hunter repository is:")
-	console.log(curled_build_status_string)
+	console.log(curled_build_status)
+	console.log("")
 	
 	// encode build status as a number such that it can be passed to the contract
 	// TODO: convert to boolean to save gas costs
-	const encoded_build_status = encode(curled_build_status_string);
+	const encoded_build_status = encode(curled_build_status);
 	console.log("encoded_build_status")
-	console.log(encoded_build_status)	
+	console.log(encoded_build_status)
+	console.log("")
+	
 	
 	// -----------------------------------------Verify the contract returns the correct retrieved value ----------------------------
 	// specify the mock value that is into the contract fed by the Tellor oracles:
