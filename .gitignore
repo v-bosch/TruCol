@@ -373,3 +373,11 @@ testeth
 node_modules
 bin_output
 logs
+
+# Tellor
+tellor_all_languages/hunter.txt
+tellor_all_languages/hunter_temp_content.txt
+tellor_all_languages/output.txt
+tellor_all_languages/sponsor.txt
+tellor_all_languages/sponsor_temp_content.txt
+tellor_all_languages/file_contents_unchanged.txt
