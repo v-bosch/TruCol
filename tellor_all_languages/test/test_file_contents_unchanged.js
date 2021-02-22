@@ -81,12 +81,12 @@ contract("UsingTellor Tests", function (accounts) {
 	//const branch_hunter = "attack_unit_test"
 	//const commit_hunter = "ede9a66a551b105f83e73f4274a3f9dbea7df6ff"
 	const branch_hunter = "no_attack_in_filecontent"
-	const commit_hunter = "0225ac36b43b0158c6cd95668b4622dbb73ebd3e"
+	const commit_hunter = "4d78ba9b04d26cfb95296c0cee0a7cc6a3897d44"
 	
 	const github_username_sponsor = "a-t-0"
 	const repo_name_sponsor = "sponsor_example"
 	const branch_sponsor = "main"
-	const commit_sponsor = "c90dcd4a428bdc22286e351f95bf6cbe5323cc80"
+	const commit_sponsor = "556c43c2441356971da6b55176a069e9b9497033"
 	
 	
 	// -----------------------------------------Specify Temporary input and output (files)------------------------
@@ -118,7 +118,13 @@ contract("UsingTellor Tests", function (accounts) {
 	
 	// Specify output location of repository file lists
 	// TODO: get single file list from unmutable filelist file in repo of sponsor
+	var sponsor_unmutable_filelist_filename = "unmutable_filelist.txt"
+	var sponsor_unmutable_filelist_filepath = test_output_folder+"/"+test_type+"/"+test_case+"/"+ sponsor_unmutable_filelist_filename
+	var command_to_get_unmutable_filelist = "curl \x22https://raw.githubusercontent.com/"+github_username_sponsor+"/"+repo_name_sponsor+"/"+commit_sponsor+"/"+sponsor_unmutable_filelist_filename+"\x22 > "+sponsor_unmutable_filelist_filepath
+	
+	// TODO: remove
 	var hunter_filelist_filepath = test_output_folder+"/"+test_type+"/"+test_case+"/hunter_filelist.txt"
+	// TODO: remove
 	var sponsor_filelist_filepath = test_output_folder+"/"+test_type+"/"+test_case+"/sponsor_filelist.txt"
 	var hunter_filecontent_path = test_output_folder+"/"+test_type+"/"+test_case+"/hunter_temp_filecontent.txt"
 	var sponsor_filecontent_path = test_output_folder+"/"+test_type+"/"+test_case+"/sponsor_temp_filecontent.txt"
@@ -142,30 +148,41 @@ contract("UsingTellor Tests", function (accounts) {
 	
 	// combine the commands that curl a file from the hunter and bounter repository commits respectively, and export the difference
 	// in their file content
-	// TODO: APPEND the differences for each file pair
-	var command_per_line = curl_hunter_files+" > "+hunter_filecontent_path+" && "+curl_sponsor_files+" > "+sponsor_filecontent_path+" && diff "+hunter_filecontent_path+" "+sponsor_filecontent_path+" > "+differences_filename
+	var command_per_line = curl_hunter_files+" > "+hunter_filecontent_path+" && "+curl_sponsor_files+" > "+sponsor_filecontent_path+" && diff "+hunter_filecontent_path+" "+sponsor_filecontent_path+" >> "+differences_filename
 	
 	// Print the final command that outputs the differences
 	console.log("COMMAND PER LINE=")
 	console.log(command_per_line)
 	
 	// Substitute the difference checking command into 
+	// TODO: change sponsor_filelist_filepath into unmutable variable path
 	var command = "while read line; do "+command_per_line+"; done < "+sponsor_filelist_filepath
 	console.log("cOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOommand=")
 	console.log(command)	
 	
 	// create commands to get hunter and sponsor repo file lists
+	// TODO: remove
 	var export_hunter_files = file_list_hunter_repo  +" > "+hunter_filelist_filepath
-	var export_sponsor_files = file_list_sponsor_repo  +" > "+sponsor_filelist_filepath
+	var export_sponsor_files = file_list_sponsor_repo  +" > "+sponsor_filelist_filepath	
 	
 	// remove artifacts from file lists from repos
-	// TODO: specify in var name that it is a command
-	var remove_artifacts_hunter = "sed -i -e 's/\x22,//g' "+hunter_filelist_filepath+" && sed -i -e 's/\x22path\x22: \x22//g' "+hunter_filelist_filepath
-	var remove_artifacts_sponsor = "sed -i -e 's/\x22,//g' "+sponsor_filelist_filepath+" && sed -i -e 's/\x22path\x22: \x22//g' "+sponsor_filelist_filepath
+	// TODO: remove
+	var command_remove_artifacts_hunter = "sed -i -e 's/\x22,//g' "+hunter_filelist_filepath+" && sed -i -e 's/\x22path\x22: \x22//g' "+hunter_filelist_filepath
+	var command_remove_artifacts_sponsor = "sed -i -e 's/\x22,//g' "+sponsor_filelist_filepath+" && sed -i -e 's/\x22path\x22: \x22//g' "+sponsor_filelist_filepath
 	
 	
 	// -----------------------------------------Get The Tellor Oracles Data With Shell --------------------------
+	// get unmutable file list from sponsor repo
+	console.log("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWsponsor_unmutable_filelist_path")
+	console.log(command_to_get_unmutable_filelist)
+	os.execCommand(sponsor_unmutable_filelist_filepath).then(res=> {
+		console.log("Getting list of files in repository of bounty hunter, please wait 10 seconds.", res);
+	}).catch(err=> {
+		console.log("Getting list of files in repository of bounty hunter, please wait 10 seconds.", err);
+	})
+	
 	// export hunter repo file list
+	// TODO: remove
 	os.execCommand(export_hunter_files).then(res=> {
 		console.log("Getting list of files in repository of bounty hunter, please wait 10 seconds.", res);
 	}).catch(err=> {
@@ -173,6 +190,7 @@ contract("UsingTellor Tests", function (accounts) {
 	})
 	
 	// export sponsor repo file list
+	// TODO: remove
 	os.execCommand(export_sponsor_files).then(res=> {
 		console.log("Getting list of files in repository of sponsor, please wait 10 seconds.", res);
 	}).catch(err=> {
@@ -184,14 +202,14 @@ contract("UsingTellor Tests", function (accounts) {
 	await new Promise(resolve => setTimeout(resolve, 10000));
 
 	// remove artifacts of hunter repository file list
-	os.execCommand(remove_artifacts_hunter).then(res=> {
+	os.execCommand(command_remove_artifacts_hunter).then(res=> {
 		console.log("Removing string artifacts in file list of bounty hunter, please wait 10 seconds.", res);
 	}).catch(err=> {
 		console.log("Removing string artifacts in file list of bounty hunter, please wait 10 seconds.", err);
 	})
 	
 	// remove artifacts of sponsor repository file list
-	os.execCommand(remove_artifacts_sponsor).then(res=> {
+	os.execCommand(command_remove_artifacts_sponsor).then(res=> {
 		console.log("Removing string artifacts in file list of bounty hunter, please wait 10 seconds.", res);
 	}).catch(err=> {
 		console.log("Removing string artifacts in file list of bounty hunter, please wait 10 seconds.", err);
