@@ -65,16 +65,14 @@ contract("UsingTellor Tests", function (accounts) {
     	
 
 	// -----------------------------------------Specify Tellor Oracles Data Sources ----------------------------
-	// Read whether a travis build has failed or passed
-	// v-bosch/sponsor_example - no build yet for v-bosch/sponsor_example
-	// a-t-0/taskwarrior-installation - failed
-	// a-t-0/shell_unit_testing_template - passed
+	// specify the repository commits of the sponsor and bounty hunter
 	const github_username_hunter = "a-t-0"
-	const github_username_sponsor = "a-t-0"
-	const repo_name_hunter = "sponsor_example"
-	const repo_name_sponsor = "sponsor_example"
 	const branch_hunter = "main"
+	const repo_name_hunter = "sponsor_example"
 	const commit_hunter = ""
+	
+	const github_username_sponsor = "a-t-0"
+	const repo_name_sponsor = "sponsor_example"
 	const branch_sponsor = "main"
 	const commit_sponsor = ""
 	
@@ -86,6 +84,7 @@ contract("UsingTellor Tests", function (accounts) {
 	const expected_sponsor_contract_output = 2
 	
 	// Specify local output location of curled data
+	// TODO: move into subfolder
 	var test_case = "unchanged"
 	var test_type = "file_contents"
 	var output_filename = test_type+"_"+test_case+".txt"
@@ -98,23 +97,30 @@ contract("UsingTellor Tests", function (accounts) {
 	
 	
 	// -----------------------------------------Specify Curl Commands That Get API Data---------------------------
-	// get the list of files per repo	
+	// Create command that gets the list of files in the bounty hunter repository
+	// TODO: change this to reading from a single file in the sponsor repo that specifies the unmutable file list
 	file_list_hunter_repo = "echo $(curl -X GET https://api.github.com/repos/"+github_username_hunter+"/"+repo_name_hunter+"/git/trees/"+branch_hunter+"?recursive=1) | grep -Po \x27\x22path\x22:.*?[^\\\\]\x22,\x27"
 	
+	// Create command that gets the list of files in the sponsor repository
 	file_list_sponsor_repo = "echo $(curl -X GET https://api.github.com/repos/"+github_username_sponsor+"/"+repo_name_sponsor+"/git/trees/"+branch_sponsor+"?recursive=1) | grep -Po \x27\x22path\x22:.*?[^\\\\]\x22,\x27"
 	
-	// Define command per line/file of repo
-	// TODO: First check if the line starts with:> "path": 
-	// Then remove the:"> "path": " part (without the outside double qoutation marks
-	var git_filepath = "$line"
+	// create command that curls the hunter files (based on the filename that is inside the shell variable $line)
+	var curl_hunter_files = "curl \x22https://raw.githubusercontent.com/"+github_username_hunter+"/"+repo_name_hunter+"/"+branch_hunter+"/$line\x22"
 	
-	var curl_hunter_files = "curl \x22https://raw.githubusercontent.com/"+github_username_hunter+"/"+repo_name_hunter+"/"+branch_hunter+"/"+git_filepath+"\x22"
-	var curl_sponsor_files = "curl \x22https://raw.githubusercontent.com/"+github_username_sponsor+"/"+repo_name_sponsor+"/"+branch_sponsor+"/"+git_filepath+"\x22"
+	// create command that curls the sponsor files (based on the filename that is inside the shell variable $line)
+	var curl_sponsor_files = "curl \x22https://raw.githubusercontent.com/"+github_username_sponsor+"/"+repo_name_sponsor+"/"+branch_sponsor+"/$line\x22"
+	
+	// combine the commands that curl a file from the hunter and bounter repository commits respectively, and export the difference
+	// in their file content
+	// TODO: APPEND the differences for each file pair
+	// TODO: delete the output file before starting this run
 	var command_per_line = curl_hunter_files+" > hunter_temp_content.txt"+" && "+curl_sponsor_files+" > sponsor_temp_content.txt && diff hunter_temp_content.txt sponsor_temp_content.txt > "+output_filename
+	
+	// Print the final command that outputs the differences
 	console.log("COMMAND PER LINE=")
 	console.log(command_per_line)
 	
-	// Then prepend the github repository curl command to the path that remains
+	// Substitute the difference checking command into 
 	var command = "while read line; do "+command_per_line+"; done < sponsor.txt"
 	console.log("cOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOommand=")
 	console.log(command)	
@@ -125,8 +131,8 @@ contract("UsingTellor Tests", function (accounts) {
 	
 	// remove artifacts from file lists from repos
 	// TODO: specify in name that it is a command
-	var remove_artifacts_hunter = "sed -i 's/\x22,//g' hunter.txt && sed -i 's/\x22path\x22: \x22//g' hunter.txt"
-	var remove_artifacts_sponsor = "sed -i 's/\x22,//g' sponsor.txt && sed -i 's/\x22path\x22: \x22//g' sponsor.txt"
+	var remove_artifacts_hunter = "sed -i -e 's/\x22,//g' hunter.txt && sed -i -e 's/\x22path\x22: \x22//g' hunter.txt"
+	var remove_artifacts_sponsor = "sed -i -e 's/\x22,//g' sponsor.txt && sed -i -e 's/\x22path\x22: \x22//g' sponsor.txt"
 	
 	
 	// -----------------------------------------Get The Tellor Oracles Data With Shell --------------------------
@@ -143,31 +149,27 @@ contract("UsingTellor Tests", function (accounts) {
 	}).catch(err=> {
 		console.log("Getting list of files in repository of sponsor, please wait 10 seconds.", err);
 	})
-	
-	// curl the files from the 
-	os.execCommand(export_sponsor_files).then(res=> {
-		console.log("Getting list of files in repository of sponsor, please wait 10 seconds.", res);
-	}).catch(err=> {
-		console.log("Getting list of files in repository of sponsor, please wait 10 seconds.", err);
-	})
-	
+		
 	// wait till file is read (it takes a while)
 	// TODO: do not hardcode the build time, but make it dependend on completion of the os_func function. 
 	await new Promise(resolve => setTimeout(resolve, 10000));
 
 	// remove artifacts
 	os.execCommand(remove_artifacts_hunter).then(res=> {
-		console.log("Getting list of files in repository of bounty hunter, please wait 10 seconds.", res);
+		console.log("Removing string artifacts in file list of bounty hunter, please wait 10 seconds.", res);
 	}).catch(err=> {
-		console.log("Getting list of files in repository of bounty hunter, please wait 10 seconds.", err);
+		console.log("Removing string artifacts in file list of bounty hunter, please wait 10 seconds.", err);
 	})
 	os.execCommand(remove_artifacts_sponsor).then(res=> {
-		console.log("Getting list of files in repository of bounty hunter, please wait 10 seconds.", res);
+		console.log("Removing string artifacts in file list of bounty hunter, please wait 10 seconds.", res);
 	}).catch(err=> {
-		console.log("Getting list of files in repository of bounty hunter, please wait 10 seconds.", err);
+		console.log("Removing string artifacts in file list of bounty hunter, please wait 10 seconds.", err);
 	})
 
-	
+	// wait till file is read (it takes a while)
+	// TODO: do not hardcode the build time, but make it dependend on completion of the os_func function. 
+	await new Promise(resolve => setTimeout(resolve, 10000));
+
 	// compare differences in file content
 	os.execCommand(command).then(res=> {
 		console.log("Computing the difference between the list of files in the repos of the sponsor and bounty hunter, please wait 10 seconds.", res);
@@ -175,20 +177,6 @@ contract("UsingTellor Tests", function (accounts) {
 		console.log("Computing the difference between the list of files in the repos of the sponsor and bounty hunter, please wait 10 seconds.", err);
 	})
 	
-	// Retry bash command
-	console.log("REEEEEEEEETRY")
-	// Source: https://stackoverflow.com/questions/37732331/execute-bash-command-in-node-js-and-get-exit-code
-	dir = exec(command, function(err, stdout, stderr) {
-	  if (err) {
-		// should have err.code here?  
-	  }
-	  console.log(stdout);
-	});
-
-	dir.on('exit', function (code) {
-	  // exit code is code
-	});
-
 	// wait till file is read (it takes a while)
 	// TODO: do not hardcode the build time, but make it dependend on completion of the os_func function. 
 	await new Promise(resolve => setTimeout(resolve, 10000));
