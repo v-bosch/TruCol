@@ -25,7 +25,10 @@ contract("UsingTellor Tests", function (accounts) {
 	const requestId = 1; // assumes the first ID of the list of tellor variable contains what we return, e.g. usd/BTC (in our case, checkflag text)
 	// TODO: change the requestId to two strings: 
 	// 0. the bounty hunter github name
-	// 1. The repository name belonging to the sponsor contract
+	// 1. The repository name and commit belonging to the sponsor contract 
+	// OR let the Tellor oracles scrape this data from the sponsor contract to reduce gas costs.
+	// (unless the Tellor oracles cannot find what the bounty hunter contract was that initated this Tellor query,
+	// in that case the repository name and commit of the bounty hunter should be passed).
     	
     	
 	// -----------------------------------------Helper Functions ----------------------------
@@ -56,7 +59,7 @@ contract("UsingTellor Tests", function (accounts) {
 	}
 	var os = new os_func();
 	
-	// retry getting some file
+	// getting some file
 	function doCall(urlToCall, callback) {
 		urllib.request(urlToCall, { wd: 'nodejs' }, function (err, data, response) {                              
 		    return callback(data);
@@ -68,8 +71,6 @@ contract("UsingTellor Tests", function (accounts) {
 
 		if (!fs.existsSync(dir)){
 			fs.mkdirSync(dir);
-			console.log("created directory")
-			console.log(dir)
 		}
 	}
 
@@ -103,14 +104,13 @@ contract("UsingTellor Tests", function (accounts) {
 	var test_case = "unchanged"
 	
 	// Empty test output folder before using it
-	//fs.rmdirSync(test_output_folder, { recursive: true });
 	var rimraf = require("rimraf"); //npm install rimraf
-	rimraf(test_output_folder, function () { console.log("done"); });
+	rimraf(test_output_folder, function () { console.log("Removed the old content of the temporary output directory.\n"); });
 	
 	// TODO: do not hardcode the folder deletion time
 	await new Promise(resolve => setTimeout(resolve, 2000));
 	
-	// Create temporary test output folder for curled data
+	// (Re-)create temporary test output folder for curled data
 	create_output_dir(test_output_folder)
 	create_output_dir(test_output_folder+"/"+test_type)
 	create_output_dir(test_output_folder+"/"+test_type+"/"+test_case)
@@ -118,10 +118,11 @@ contract("UsingTellor Tests", function (accounts) {
 	// specify the output directory and filename of the file that contains the differences
 	var differences_filename =test_output_folder+"/"+test_type+"/"+test_case+"/"+test_type+"_"+test_case+".txt"
 	
-	// Specify output location of repository file lists
+	// Specify output location of the local- and remote list of unmutable files defined by the sponsor
 	var sponsor_unmutable_filelist_filepath = test_output_folder+"/"+test_type+"/"+test_case+"/"+ sponsor_unmutable_filelist_filename
 	var command_to_get_unmutable_filelist = "curl \x22https://raw.githubusercontent.com/"+github_username_sponsor+"/"+repo_name_sponsor+"/"+commit_sponsor+"/"+sponsor_unmutable_filelist_filename+"\x22 > "+sponsor_unmutable_filelist_filepath
 	
+	// Specify the output paths for the unter and sponsor files
 	var hunter_filecontent_path = test_output_folder+"/"+test_type+"/"+test_case+"/hunter_temp_filecontent.txt"
 	var sponsor_filecontent_path = test_output_folder+"/"+test_type+"/"+test_case+"/sponsor_temp_filecontent.txt"
 	
@@ -138,18 +139,18 @@ contract("UsingTellor Tests", function (accounts) {
 	var command_per_line = curl_hunter_files+" > "+hunter_filecontent_path+" && "+curl_sponsor_files+" > "+sponsor_filecontent_path+" && diff "+hunter_filecontent_path+" "+sponsor_filecontent_path+" >> "+differences_filename
 	
 	// Print the final command that outputs the differences
-	console.log("COMMAND PER LINE=")
+	console.log("The shell command that curls the bounty hunter file and sponsor file for each specified unmutable file is=")
 	console.log(command_per_line)
+	console.log("")
 	
-	// Substitute the difference checking command into 
+	// Substitute the difference checking command into a command that loops through file list marked unmutable by the sponsor
 	var command = "while read line; do "+command_per_line+"; done < "+sponsor_unmutable_filelist_filepath
-	console.log("cOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOommand=")
+	console.log("The differences of each unmutable file is appended to a single differences file with the following shell command:")
 	console.log(command)
+	console.log("")
 	
 	// -----------------------------------------Get The Tellor Oracles Data With Shell --------------------------
 	// get unmutable file list from sponsor repo
-	console.log("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWsponsor_unmutable_filelist_path")
-	console.log(command_to_get_unmutable_filelist)
 	os.execCommand(command_to_get_unmutable_filelist).then(res=> {
 		console.log("Getting list of unmutable files from the sponsor repository, please wait 10 seconds.", res);
 	}).catch(err=> {
@@ -162,9 +163,9 @@ contract("UsingTellor Tests", function (accounts) {
 
 	// compare differences in file content
 	os.execCommand(command).then(res=> {
-		console.log("Computing the difference between the list of files in the repos of the sponsor and bounty hunter, please wait 10 seconds.", res);
+		console.log("Checking if the bounty hunter changed a file marked 'unmutable' by the sponsor, please wait 10 seconds.", res);
 	}).catch(err=> {
-		console.log("Computing the difference between the list of files in the repos of the sponsor and bounty hunter, please wait 10 seconds.", err);
+		console.log("Checking if the bounty hunter changed a file marked 'unmutable' by the sponsor, please wait 10 seconds.", err);
 	})
 	
 	// wait till file is read (it takes a while)
@@ -175,15 +176,16 @@ contract("UsingTellor Tests", function (accounts) {
 	var fs = require('fs');
 	var difference_in_file_lists = fs.readFileSync(differences_filename);
 	var string_difference_in_file_lists = difference_in_file_lists.toString();
-	console.log("The list of different files between sponsor repo and bounty hunter repo is:")
+	console.log("The list of different files in unmutable files should be void/empty, it is:")
 	console.log(string_difference_in_file_lists)
-	console.log("That was it")
+	console.log("")
+
 	
 	// encode build checkflag
 	const encoded_difference_in_file_lists = encode(string_difference_in_file_lists+"offset");
 	console.log("The numerically encoded list of different files between sponsor repo and bounty hunter repo is (including an offset):")
 	console.log(encoded_difference_in_file_lists)
-	console.log("That was it")
+	console.log("")
 		
 	// specify the mock value that is fed by the Tellor oracles into the contract:
 	const mockValue = encoded_difference_in_file_lists;
