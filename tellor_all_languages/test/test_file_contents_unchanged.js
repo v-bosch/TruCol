@@ -62,19 +62,32 @@ contract("UsingTellor Tests", function (accounts) {
 		    return callback(data);
 		});
 	}
-    	
+    
+   	function create_output_dir(dir) {	
+		var fs = require('fs');
+
+		if (!fs.existsSync(dir)){
+			fs.mkdirSync(dir);
+			console.log("created directory")
+			console.log(dir)
+		}
+	}
 
 	// -----------------------------------------Specify Tellor Oracles Data Sources ----------------------------
 	// specify the repository commits of the sponsor and bounty hunter
-	const github_username_hunter = "a-t-0"
-	const branch_hunter = "main"
+	const github_username_hunter = "a-t-0"	
 	const repo_name_hunter = "sponsor_example"
-	const commit_hunter = ""
+	// TODO: copy to test_file_contents_changed.js once the remainder TODO's are processed
+	//const branch_hunter = "attack_unit_test"
+	//const commit_hunter = "ede9a66a551b105f83e73f4274a3f9dbea7df6ff"
+	// TODO: change to separate branch: no_filecontent_attack
+	const branch_hunter = "no_attack_in_filecontent"
+	const commit_hunter = "0225ac36b43b0158c6cd95668b4622dbb73ebd3e"
 	
 	const github_username_sponsor = "a-t-0"
 	const repo_name_sponsor = "sponsor_example"
 	const branch_sponsor = "main"
-	const commit_sponsor = ""
+	const commit_sponsor = "c90dcd4a428bdc22286e351f95bf6cbe5323cc80"
 	
 	
 	// -----------------------------------------Specify Temporary input and output (files)------------------------
@@ -85,15 +98,34 @@ contract("UsingTellor Tests", function (accounts) {
 	
 	// Specify local output location of curled data
 	// TODO: move into subfolder
-	var test_case = "unchanged"
+	var test_output_folder = "curled_test_data"
 	var test_type = "file_contents"
-	var output_filename = test_type+"_"+test_case+".txt"
+	var test_case = "unchanged"
+	
+	// Empty test output folder before using it
+	//fs.rmdirSync(test_output_folder, { recursive: true });
+	var rimraf = require("rimraf"); //npm install rimraf
+	rimraf(test_output_folder, function () { console.log("done"); });
+	
+	// TODO: do not hardcode the folder deletion time
+	await new Promise(resolve => setTimeout(resolve, 2000));
+	
+	// Create temporary test output folder for curled data
+	create_output_dir(test_output_folder)
+	create_output_dir(test_output_folder+"/"+test_type)
+	create_output_dir(test_output_folder+"/"+test_type+"/"+test_case)
+	
+	// specify the output directory and filename of the file that contains the differences
+	var differences_filename =test_output_folder+"/"+test_type+"/"+test_case+"/"+test_type+"_"+test_case+".txt"
 	
 	// Specify output location of repository file lists
 	// TODO: move into subfolder
 	// TODO: refactor into names that contain test type
-	var hunter_filelist_filename = "hunter.txt"
-	var sponsor_filelist_filename = "sponsor.txt"
+	// TODO: get single file list from unmutable filelist file in repo of sponsor
+	var hunter_filelist_filepath = test_output_folder+"/"+test_type+"/"+test_case+"/hunter_filelist.txt"
+	var sponsor_filelist_filepath = test_output_folder+"/"+test_type+"/"+test_case+"/sponsor_filelist.txt"
+	var hunter_filecontent_path = test_output_folder+"/"+test_type+"/"+test_case+"/hunter_temp_filecontent.txt"
+	var sponsor_filecontent_path = test_output_folder+"/"+test_type+"/"+test_case+"/sponsor_temp_filecontent.txt"
 	
 	
 	// -----------------------------------------Specify Curl Commands That Get API Data---------------------------
@@ -103,36 +135,38 @@ contract("UsingTellor Tests", function (accounts) {
 	
 	// Create command that gets the list of files in the sponsor repository
 	file_list_sponsor_repo = "echo $(curl -X GET https://api.github.com/repos/"+github_username_sponsor+"/"+repo_name_sponsor+"/git/trees/"+branch_sponsor+"?recursive=1) | grep -Po \x27\x22path\x22:.*?[^\\\\]\x22,\x27"
+	console.log("file_list_sponsor_repo")
+	console.log(file_list_sponsor_repo)
 	
 	// create command that curls the hunter files (based on the filename that is inside the shell variable $line)
-	var curl_hunter_files = "curl \x22https://raw.githubusercontent.com/"+github_username_hunter+"/"+repo_name_hunter+"/"+branch_hunter+"/$line\x22"
+	var curl_hunter_files = "curl \x22https://raw.githubusercontent.com/"+github_username_hunter+"/"+repo_name_hunter+"/"+commit_hunter+"/$line\x22"
 	
 	// create command that curls the sponsor files (based on the filename that is inside the shell variable $line)
-	var curl_sponsor_files = "curl \x22https://raw.githubusercontent.com/"+github_username_sponsor+"/"+repo_name_sponsor+"/"+branch_sponsor+"/$line\x22"
+	var curl_sponsor_files = "curl \x22https://raw.githubusercontent.com/"+github_username_sponsor+"/"+repo_name_sponsor+"/"+commit_sponsor+"/$line\x22"
 	
 	// combine the commands that curl a file from the hunter and bounter repository commits respectively, and export the difference
 	// in their file content
 	// TODO: APPEND the differences for each file pair
 	// TODO: delete the output file before starting this run
-	var command_per_line = curl_hunter_files+" > hunter_temp_content.txt"+" && "+curl_sponsor_files+" > sponsor_temp_content.txt && diff hunter_temp_content.txt sponsor_temp_content.txt > "+output_filename
+	var command_per_line = curl_hunter_files+" > "+hunter_filecontent_path+" && "+curl_sponsor_files+" > "+sponsor_filecontent_path+" && diff "+hunter_filecontent_path+" "+sponsor_filecontent_path+" > "+differences_filename
 	
 	// Print the final command that outputs the differences
 	console.log("COMMAND PER LINE=")
 	console.log(command_per_line)
 	
 	// Substitute the difference checking command into 
-	var command = "while read line; do "+command_per_line+"; done < sponsor.txt"
+	var command = "while read line; do "+command_per_line+"; done < "+sponsor_filelist_filepath
 	console.log("cOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOommand=")
 	console.log(command)	
 	
 	// create commands to get hunter and sponsor repo file lists
-	var export_hunter_files = file_list_hunter_repo  +" > hunter.txt"
-	var export_sponsor_files = file_list_sponsor_repo  +" > sponsor.txt"
+	var export_hunter_files = file_list_hunter_repo  +" > "+hunter_filelist_filepath
+	var export_sponsor_files = file_list_sponsor_repo  +" > "+sponsor_filelist_filepath
 	
 	// remove artifacts from file lists from repos
 	// TODO: specify in name that it is a command
-	var remove_artifacts_hunter = "sed -i -e 's/\x22,//g' hunter.txt && sed -i -e 's/\x22path\x22: \x22//g' hunter.txt"
-	var remove_artifacts_sponsor = "sed -i -e 's/\x22,//g' sponsor.txt && sed -i -e 's/\x22path\x22: \x22//g' sponsor.txt"
+	var remove_artifacts_hunter = "sed -i -e 's/\x22,//g' "+hunter_filelist_filepath+" && sed -i -e 's/\x22path\x22: \x22//g' "+hunter_filelist_filepath
+	var remove_artifacts_sponsor = "sed -i -e 's/\x22,//g' "+sponsor_filelist_filepath+" && sed -i -e 's/\x22path\x22: \x22//g' "+sponsor_filelist_filepath
 	
 	
 	// -----------------------------------------Get The Tellor Oracles Data With Shell --------------------------
@@ -154,12 +188,14 @@ contract("UsingTellor Tests", function (accounts) {
 	// TODO: do not hardcode the build time, but make it dependend on completion of the os_func function. 
 	await new Promise(resolve => setTimeout(resolve, 10000));
 
-	// remove artifacts
+	// remove artifacts of hunter repository file list
 	os.execCommand(remove_artifacts_hunter).then(res=> {
 		console.log("Removing string artifacts in file list of bounty hunter, please wait 10 seconds.", res);
 	}).catch(err=> {
 		console.log("Removing string artifacts in file list of bounty hunter, please wait 10 seconds.", err);
 	})
+	
+	// remove artifacts of sponsor repository file list
 	os.execCommand(remove_artifacts_sponsor).then(res=> {
 		console.log("Removing string artifacts in file list of bounty hunter, please wait 10 seconds.", res);
 	}).catch(err=> {
@@ -183,7 +219,7 @@ contract("UsingTellor Tests", function (accounts) {
 	
 	// read out the pass/fail status of the repository build from file
 	var fs = require('fs');
-	var difference_in_file_lists = fs.readFileSync(output_filename);
+	var difference_in_file_lists = fs.readFileSync(differences_filename);
 	var string_difference_in_file_lists = difference_in_file_lists.toString();
 	console.log("The list of different files between sponsor repo and bounty hunter repo is:")
 	console.log(string_difference_in_file_lists)

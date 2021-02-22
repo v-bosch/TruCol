@@ -375,9 +375,6 @@ bin_output
 logs
 
 # Tellor
-tellor_all_languages/hunter.txt
-tellor_all_languages/hunter_temp_content.txt
-tellor_all_languages/output.txt
-tellor_all_languages/sponsor.txt
-tellor_all_languages/sponsor_temp_content.txt
-tellor_all_languages/file_contents_unchanged.txt
+tellor_all_languages/curled_test_data/*
+tellor_all_languages/package-lock.json
+tellor_all_languages/package.json
