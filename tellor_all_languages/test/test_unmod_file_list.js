@@ -1,6 +1,6 @@
 var urllib = require('urllib');
 
-const CompareFileContents = artifacts.require("./CompareFileContents.sol");
+const CompareFileListsInRepo = artifacts.require("./CompareFileListsInRepo.sol");
 const Tellor = artifacts.require("TellorPlayground.sol");
 
 //Helper function that submits and value and returns a timestamp for easy retrieval
@@ -13,12 +13,12 @@ const submitTellorValue = async (tellorOracle, requestId, amount) => {
 };
 
 contract("UsingTellor Tests", function (accounts) {
-	let compareFileContents;
+	let compareFileListsInRepo;
 	let tellorOracle;
 
 	beforeEach("Setup contract for each test", async function () {
 	tellorOracle = await Tellor.new();
-	compareFileContents = await CompareFileContents.new(tellorOracle.address);
+	compareFileListsInRepo = await CompareFileListsInRepo.new(tellorOracle.address);
 	});
 
 	it("Update Price", async function () {
@@ -65,7 +65,8 @@ contract("UsingTellor Tests", function (accounts) {
 		    return callback(data);
 		});
 	}
-    
+
+	// creates a temporary output dir for queried data
    	function create_output_dir(dir) {	
 		var fs = require('fs');
 
@@ -74,30 +75,32 @@ contract("UsingTellor Tests", function (accounts) {
 		}
 	}
 
+
 	// -----------------------------------------Specify Tellor Oracles Data Sources ----------------------------
 	// specify the repository commits of the sponsor and bounty hunter
 	const github_username_hunter = "a-t-0"	
 	const repo_name_hunter = "sponsor_example"
-	const branch_hunter = "attack_unit_test"
-	const commit_hunter = "2bd88d1551a835b12c31d8a392f2ee0bf0977c65"
+	const branch_hunter = "no_attack_in_new_file"
+	const commit_hunter = "d8e518b97cc1a528f49a01081890931403361561"
 	
 	const github_username_sponsor = "a-t-0"
 	const repo_name_sponsor = "sponsor_example"
 	const branch_sponsor = "main"
 	const commit_sponsor = "556c43c2441356971da6b55176a069e9b9497033"
-	const sponsor_unmutable_filelist_filename = "unmutable_filelist.txt"
 	
-	
+		
 	// -----------------------------------------Specify Temporary input and output (files)------------------------
 	// Show the contract contains the logic to identify a correct build fail/pass. 
-	// If the build passes, a uint256 of value 2 is expected 
+	// If the bounty hunter did not add an additional (attack) file, a uint256 of value 2 is expected
 	// from the contract. Otherwise a uint of value 1 is expected.
 	const expected_sponsor_contract_output = 1
 	
 	// Specify local output location of curled data
 	var test_output_folder = "curled_test_data"
-	var test_type = "file_contents"
-	var test_case = "unchanged"
+	var test_type = "file_list"
+	var test_case = "changed"
+	var output_filepath_hunter = test_output_folder+"/"+test_type+"/"+test_case+"/"+test_type+"_"+test_case+"_hunter.json"
+	var output_filepath_sponsor = test_output_folder+"/"+test_type+"/"+test_case+"/"+test_type+"_"+test_case+"_sponsor.json"
 	
 	// Empty test output folder before using it
 	var rimraf = require("rimraf"); //npm install rimraf
@@ -111,84 +114,88 @@ contract("UsingTellor Tests", function (accounts) {
 	create_output_dir(test_output_folder+"/"+test_type)
 	create_output_dir(test_output_folder+"/"+test_type+"/"+test_case)
 	
-	// specify the output directory and filename of the file that contains the differences
-	var differences_filename =test_output_folder+"/"+test_type+"/"+test_case+"/"+test_type+"_"+test_case+".txt"
 	
-	// Specify output location of the local- and remote list of unmutable files defined by the sponsor
-	var sponsor_unmutable_filelist_filepath = test_output_folder+"/"+test_type+"/"+test_case+"/"+ sponsor_unmutable_filelist_filename
-	var command_to_get_unmutable_filelist = "curl \x22https://raw.githubusercontent.com/"+github_username_sponsor+"/"+repo_name_sponsor+"/"+commit_sponsor+"/"+sponsor_unmutable_filelist_filename+"\x22 > "+sponsor_unmutable_filelist_filepath
+	// -----------------------------------------Specify Curl Commands That Get API Data---------------------------	
+	// create comand to get file list of hunter repo commit
+	var command_to_get_hunter_filelist = "GET https://api.github.com/repos/"+github_username_hunter+"/"+repo_name_hunter+"/git/trees/"+commit_hunter+"?recursive=1 > "+output_filepath_hunter
 	
-	// Specify the output paths for the unter and sponsor files
-	var hunter_filecontent_path = test_output_folder+"/"+test_type+"/"+test_case+"/hunter_temp_filecontent.txt"
-	var sponsor_filecontent_path = test_output_folder+"/"+test_type+"/"+test_case+"/sponsor_temp_filecontent.txt"
+	// print command to terminal
+	console.log("The shell command that gets the hunter file list is:")
+	console.log(command_to_get_hunter_filelist)
+	console.log("")	
 	
+	// create comand to get file list of sponsor repo commit
+	var command_to_get_sponsor_filelist = "GET https://api.github.com/repos/"+github_username_sponsor+"/"+repo_name_sponsor+"/git/trees/"+commit_sponsor+"?recursive=1 > "+output_filepath_sponsor
+
+	// print command to terminal
+	console.log("The shell command that gets the sponsor file list is:")
+	console.log(command_to_get_sponsor_filelist)
+	console.log("")	
 	
-	// -----------------------------------------Specify Curl Commands That Get API Data---------------------------
-	// create command that curls the hunter files (based on the filename that is inside the shell variable $line)
-	var curl_hunter_files = "curl \x22https://raw.githubusercontent.com/"+github_username_hunter+"/"+repo_name_hunter+"/"+commit_hunter+"/$line\x22"
-	
-	// create command that curls the sponsor files (based on the filename that is inside the shell variable $line)
-	var curl_sponsor_files = "curl \x22https://raw.githubusercontent.com/"+github_username_sponsor+"/"+repo_name_sponsor+"/"+commit_sponsor+"/$line\x22"
-	
-	// combine the commands that curl a file from the hunter and bounter repository commits respectively, and export the difference
-	// in their file content
-	var command_per_line = curl_hunter_files+" > "+hunter_filecontent_path+" && "+curl_sponsor_files+" > "+sponsor_filecontent_path+" && diff "+hunter_filecontent_path+" "+sponsor_filecontent_path+" >> "+differences_filename
-	
-	// Print the final command that outputs the differences
-	console.log("The shell command that curls the bounty hunter file and sponsor file for each specified unmutable file is=")
-	console.log(command_per_line)
-	console.log("")
-	
-	// Substitute the difference checking command into a command that loops through file list marked unmutable by the sponsor
-	var command = "while read line; do "+command_per_line+"; done < "+sponsor_unmutable_filelist_filepath
-	console.log("The differences of each unmutable file is appended to a single differences file with the following shell command:")
-	console.log(command)
-	console.log("")
 	
 	// -----------------------------------------Get The Tellor Oracles Data With Shell --------------------------
-	// get unmutable file list from sponsor repo
-	os.execCommand(command_to_get_unmutable_filelist).then(res=> {
-		console.log("Getting list of unmutable files from the sponsor repository, please wait 10 seconds.", res);
+	// get file list from hunter repo
+	os.execCommand(command_to_get_hunter_filelist).then(res=> {
+		console.log("Getting filelist from the hunter repository, please wait 10 seconds.", res);
 	}).catch(err=> {
-		console.log("Getting list of unmutable files from the sponsor repository, please wait 10 seconds.", err);
+		console.log("Getting filelist from the hunter repository, please wait 10 seconds.", err);
 	})
 			
-	// wait till file is read (it takes a while)
-	// TODO: do not hardcode the build time, but make it dependend on completion of the os_func function. 
-	await new Promise(resolve => setTimeout(resolve, 10000));
-
-	// compare differences in file content
-	os.execCommand(command).then(res=> {
-		console.log("Checking if the bounty hunter changed a file marked 'unmutable' by the sponsor, please wait 10 seconds.", res);
+	// get file list from sponsor repo
+	os.execCommand(command_to_get_sponsor_filelist).then(res=> {
+		console.log("Getting filelist from the sponsor repository, please wait 10 seconds.", res);
 	}).catch(err=> {
-		console.log("Checking if the bounty hunter changed a file marked 'unmutable' by the sponsor, please wait 10 seconds.", err);
-	})
+		console.log("Getting filelist from the sponsor repository, please wait 10 seconds.", err);
+	})		
 	
 	// wait till file is read (it takes a while)
 	// TODO: do not hardcode the build time, but make it dependend on completion of the os_func function. 
 	await new Promise(resolve => setTimeout(resolve, 10000));
-	
-	// read out the pass/fail status of the repository build from file
-	var fs = require('fs');
-	var difference_in_file_lists = fs.readFileSync(differences_filename);
-	var string_difference_in_file_lists = difference_in_file_lists.toString();
-	console.log("The list of different files in unmutable files should be not void/empty, because this tests an attack of the bounty hunter on the unit test. The detected difference is:")
-	console.log(string_difference_in_file_lists)
-	console.log("")
 
+
+	// -----------------------------------------Process The Tellor Oracles Data -------------------------------------
+	// Computing differences in node js
+	// Read out the Travis build status that is outputed to a file, from the file.	
+	var fs = require('fs');
+	var hunter_filelist = JSON.parse(fs.readFileSync(output_filepath_hunter, 'utf8'));
+	var sponsor_filelist = JSON.parse(fs.readFileSync(output_filepath_sponsor, 'utf8'));
+	
+	var hunter_filepaths = [];
+	for(let val of hunter_filelist["tree"]) {
+		hunter_filepaths.push(val["path"]);
+	}
+	var sponsor_filepaths = [];
+	for(let val of sponsor_filelist["tree"]) {
+		sponsor_filepaths.push(val["path"]);
+	}
+	
+	// Source: https://stackoverflow.com/questions/13523611/how-to-compare-two-arrays-in-node-js
+	// Note: ignored Nan edge case cause file names should not be Nan values
+	if (hunter_filepaths.length == sponsor_filepaths.length
+		&& hunter_filepaths.every(function(u, i) {
+		    return u === sponsor_filepaths[i];
+		})
+	) {
+		var file_lists_differ =  false;
+	} else {
+	   	var file_lists_differ =  true;
+	}
+	console.log("file_lists_differ is:")
+	console.log(file_lists_differ)
 	
 	// encode build checkflag
-	const encoded_difference_in_file_lists = encode(string_difference_in_file_lists+"offset");
+	const encoded_difference_in_file_lists = encode(file_lists_differ+"offset");
 	console.log("The numerically encoded list of different files between sponsor repo and bounty hunter repo is (including an offset):")
 	console.log(encoded_difference_in_file_lists)
 	console.log("")
-		
+	
+	
+	// -----------------------------------------Verify the contract returns the correct retrieved value ----------------------------	
 	// specify the mock value that is fed by the Tellor oracles into the contract:
 	const mockValue = encoded_difference_in_file_lists;
 	
-	// -----------------------------------------Verify the contract returns the correct retrieved value ----------------------------
     await tellorOracle.submitValue(requestId, mockValue);
-    let retrievedVal = await compareFileContents.readTellorValue(requestId);
+    let retrievedVal = await compareFileListsInRepo.readTellorValue(requestId);
 	assert.equal(retrievedVal.toString(), expected_sponsor_contract_output);
   });
 });

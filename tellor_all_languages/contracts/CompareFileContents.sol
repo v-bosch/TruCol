@@ -2,7 +2,7 @@ pragma solidity >=0.5.16;
 import "usingtellor/contracts/UsingTellor.sol";
 import "usingtellor/contracts/TellorPlayground.sol";
 
-contract CompareFileListsInRepo is UsingTellor {
+contract CompareFileContents is UsingTellor {
     constructor(address payable _tellorAddress)
         public
         UsingTellor(_tellorAddress)
@@ -20,16 +20,13 @@ contract CompareFileListsInRepo is UsingTellor {
 		
 		
 		// numerical js encoding of "zero difference in file lists+some offset to not get an incoming None value"
-		// computed manually with encode function from test_unmoidified_file_list.js
-		uint256 untampered_file_list = 549905900127242415203700;
-		uint256 tampered_file_list = 123770503713065264643007860;
+		 // computed manually with encode function from test_unmoidified_file_list.js
+		 uint256 untampered_file_list = 122485596185972;
 		 
 		 // Check if build passed or not (based on hardcoded encoding of string build:passed
 		if (value == untampered_file_list) 
 			return 2; // The file list in the repo of the bounty hunter is not tampered with
-		if (value == tampered_file_list) 
-			return 1; // The file list in the repo of the bounty hunter is not tampered with
-        return value; // The file list/code skeleton provided by the sponsor is modified
+        return 1; // The file list/code skeleton provided by the sponsor is modified
     }
 
     function readTellorValueBefore(uint256 _tellorId, uint256 _timestamp)

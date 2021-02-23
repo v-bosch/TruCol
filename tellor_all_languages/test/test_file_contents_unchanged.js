@@ -1,6 +1,6 @@
 var urllib = require('urllib');
 
-const CompareFileListsInRepo = artifacts.require("./CompareFileListsInRepo.sol");
+const CompareFileContents = artifacts.require("./CompareFileContents.sol");
 const Tellor = artifacts.require("TellorPlayground.sol");
 
 //Helper function that submits and value and returns a timestamp for easy retrieval
@@ -13,12 +13,12 @@ const submitTellorValue = async (tellorOracle, requestId, amount) => {
 };
 
 contract("UsingTellor Tests", function (accounts) {
-	let compareFileListsInRepo;
+	let compareFileContents;
 	let tellorOracle;
 
 	beforeEach("Setup contract for each test", async function () {
 	tellorOracle = await Tellor.new();
-	compareFileListsInRepo = await CompareFileListsInRepo.new(tellorOracle.address);
+	compareFileContents = await CompareFileContents.new(tellorOracle.address);
 	});
 
 	it("Update Price", async function () {
@@ -192,7 +192,7 @@ contract("UsingTellor Tests", function (accounts) {
 	
 	// -----------------------------------------Verify the contract returns the correct retrieved value ----------------------------
     await tellorOracle.submitValue(requestId, mockValue);
-    let retrievedVal = await compareFileListsInRepo.readTellorValue(requestId);
+    let retrievedVal = await compareFileContents.readTellorValue(requestId);
 	assert.equal(retrievedVal.toString(), expected_sponsor_contract_output);
   });
 });
