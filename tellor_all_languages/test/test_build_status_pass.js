@@ -1,4 +1,4 @@
-const SampleUsingTellor = artifacts.require("./SampleUsingTellor.sol");
+const BuildStatusCheck = artifacts.require("./BuildStatusCheck.sol");
 const Tellor = artifacts.require("TellorPlayground.sol");
 
 //Helper function that submits and value and returns a timestamp for easy retrieval
@@ -11,12 +11,12 @@ const submitTellorValue = async (tellorOracle, requestId, amount) => {
 };
 
 contract("UsingTellor Tests", function (accounts) {
-	let sampleUsingTellor;
+	let buildStatusCheck;
 	let tellorOracle;
 
 	beforeEach("Setup contract for each test", async function () {
 	tellorOracle = await Tellor.new();
-	sampleUsingTellor = await SampleUsingTellor.new(tellorOracle.address);
+	buildStatusCheck = await BuildStatusCheck.new(tellorOracle.address);
 	});
 
 	it("Update Price", async function () {
@@ -143,7 +143,7 @@ contract("UsingTellor Tests", function (accounts) {
 	
 	// Simulate the Tellor oracle and test the contract on oracle output.
     await tellorOracle.submitValue(requestId, mockValue);
-    let retrievedVal = await sampleUsingTellor.readTellorValue(requestId);
+    let retrievedVal = await buildStatusCheck.readTellorValue(requestId);
 	assert.equal(retrievedVal.toString(), expected_sponsor_contract_output);
   });
 });
