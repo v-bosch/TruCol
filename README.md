@@ -4,7 +4,7 @@ TruCol aims at building a decentralized, trust-less platform for test-driven pro
 
 ## Description
 
-Suppose Alice wants some well-defined challenge, e.g. solve an 'n*n' Sudoku, to be solved and writes a set of unit tests that check any solution using random inputs. Instead of creating the solution, Alice publishes the unit tests in a smart contract and sets a bounty for any other smart contract that solves it. Bob the bounty hunter can then see the contract and write a solution in a smart contract and get the reward. This repository presents the protocol to do this completely trustless and decentralised without taking any fees, increasing market efficiency.
+Suppose Alice wants some well-defined challenge, such as an 'n\*n' sudoku, to be solved and writes a set of unit tests that check any solution using random inputs. Instead of creating the solution, Alice publishes the unit tests in a smart contract and sets a bounty for any other smart contract that solves it. Bob the bounty hunter can then see the contract and write a solution in a smart contract and get the reward. This repository presents the protocol to do this completely trustless and decentralised without taking any fees, increasing market efficiency.
 
 ![1](./FAQ/concept.png)
 
@@ -16,7 +16,7 @@ Suppose Alice wants some well-defined challenge, e.g. solve an 'n*n' Sudoku, to 
 
 ## Weaknesses
 
-0. Currently, the fully trustless decentralised version of the protocol is only implemented in Solidity to Solidity. This is  a significant constraint on the adoptability as most test-driven development happens in other languages like Python/C etc. [Issue 5](https://github.com/v-bosch/TruCol/issues/5) describes how the protocol can be expanded to facilitate other languages
+0. Currently, the fully trustless decentralised version of the protocol is only implemented in Solidity, to Solidity. This is  a significant constraint on the adoptability as most test-driven development happens in other languages like Python/C etc. [Issue 5](https://github.com/v-bosch/TruCol/issues/5) describes how the protocol can be expanded to facilitate other languages
 1. The costs of evaluating unit tests and solutions on chain can be significant. Scalability in costs through expansion of the chain of trust and/or allowing users to reduce decentralisation might allow users to make their own decision on "safety/costs".
 2. *The bias in "the hiring process" is only removed for test driven development jobs.
 3. *The bias in "the hiring process" is still present based on the language that sponsors write their code in. Additionally, bounty hunters and sponsors still require access to the internet to enter this free market.
