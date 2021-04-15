@@ -1,10 +1,10 @@
 # TruCol [![Solidity version](https://img.shields.io/badge/Solidity-v0.8.1-ff69b4.svg?maxAge=3600)](https://solidity.readthedocs.io/en/v0.8.1/installing-solidity.html) [![node version](https://img.shields.io/badge/node.js-%3E=_v10-green.svg)](http://nodejs.org/download/)  [![License: GPL v3](https://img.shields.io/badge/License-AGPLv3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0) [![Build Status](https://travis-ci.com/v-bosch/TruCol.svg?branch=main)](https://travis-ci.com/v-bosch/TruCol)
 
-TruCol aims at building a decentralized, trust-less platform for test-driven programming development.
+TruCol aims at building a decentralized, trustless platform for test-driven programming development.
 
 ## Description
 
-Suppose Alice wants some well-defined challenge, such as an 'n\*n' sudoku, to be solved and writes a set of unit tests that check any solution using random inputs. Instead of creating the solution, Alice publishes the unit tests in a smart contract and sets a bounty for any other smart contract that solves it. Bob the bounty hunter can then see the contract and write a solution in a smart contract and get the reward. This repository presents the protocol to do this completely trustless and decentralised without taking any fees, increasing market efficiency.
+Suppose Alice wants some well-defined challenge, such as an 'n\*n' sudoku, to be solved. She writes a set of unit tests that check any given solution, using random inputs. Instead of creating the solution herself, Alice publishes the unit tests in a smart contract and sets a bounty for any other smart contract that solves it. Bob, the bounty hunter, finds the contract and codes a solution in a smart contract, in order to receive the bounty. If Alice's requirements are fulfilled, the smart contract automatically pays out the reward. This repository presents the protocol to do this completely trustless and decentralised, without taking any fees, thus increasing market efficiency.
 
 ![1](./FAQ/concept.png)
 
